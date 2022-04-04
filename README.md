@@ -1,5 +1,3 @@
 # Fit-You
 
-# written in NodeJS
-
-# Ruth Cohen,
+Built using: node.js, express, mongoDB and mongoose

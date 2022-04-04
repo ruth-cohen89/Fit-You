@@ -1,0 +1,37 @@
+{
+  "name": "fityou",
+  "version": "1.0.0",
+  "main": "app.js",
+  "targets": {
+    "main": false
+  },
+  "scripts": {
+    "dev": "nodemon server.js",
+    "prod": "SET NODE_ENV=production&&nodemon server.js",
+    "debug": "ndb server.js"
+  },
+  "author": "Ruth Cohen",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "helmet": "^5.0.2",
+    "mongoose": "^6.2.9",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.15"
+  },
+  "engines": {
+    "node": "16.x",
+    "npm": "6.x"
+  },
+  "devDependencies": {
+    "eslint": "^8.12.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-node": "^4.1.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.6.2"
+  }
+}
