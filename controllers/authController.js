@@ -61,7 +61,9 @@ exports.signup = catchAsync(async (req, res, next) => {
   const confirmURL = `${req.protocol}://${req.get(
     'host'
   )}/emailConfirm/${confirmToken}`;
-  await new Email(newUser, confirmURL).sendWelcome();
+  const emailMessage = `Welcome to Fit-You! Submit a POST request to: ${confirmURL}.`;
+
+  await new Email(newUser, emailMessage).sendWelcome();
   res.status(200).json({
     status: 'success',
     message: 'Confimiration email successfuly sent to your address',
@@ -83,6 +85,7 @@ exports.emailConfirm = catchAsync(async (req, res, next) => {
   if (!user) {
     return next(new AppError('Token is invalid or has expired', 400));
   }
+  console.log('confirming email!')
   user.emailConfirmed = true;
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;

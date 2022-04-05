@@ -1,11 +1,8 @@
 const express = require('express');
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
-const bookingRouter = require('./bookingRoutes');
 
 const router = express.Router();
-
-router.use('/:userId/bookings', bookingRouter);
 
 router.post('/signup', authController.signup);
 router.post('/emailConfirm/:token', authController.emailConfirm);
