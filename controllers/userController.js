@@ -91,6 +91,6 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 
 exports.getAllUsers = factory.getAll(User);
 exports.getUser = factory.getOne(User);
-// Do NOT update passwords with updateUser!
+// Do NOT update passwords with updateUser
 exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);
