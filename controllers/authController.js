@@ -216,7 +216,7 @@ exports.protect = catchAsync(async (req, res, next) => {
       new AppError('You are not logged in! Please log in to get access.', 401)
     );
   }
-  //console.log(token)
+
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   const currentUser = await User.findById(decoded.id);
   if (!currentUser) {
@@ -285,7 +285,8 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     const resetURL = `${req.protocol}://${req.get(
       'host'
     )}/resetPassword/${resetToken}`;
-    await new Email(user, resetURL).sendPasswordReset();
+    const emailMessage = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
+    await new Email(user, emailMessage).sendPasswordReset();
 
     res.status(200).json({
       status: 'success',
