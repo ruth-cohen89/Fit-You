@@ -84,7 +84,6 @@ exports.emailConfirm = catchAsync(async (req, res, next) => {
   if (!user) {
     return next(new AppError('Token is invalid or has expired', 400));
   }
-  console.log('confirming email!')
   user.emailConfirmed = true;
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
@@ -93,6 +92,7 @@ exports.emailConfirm = catchAsync(async (req, res, next) => {
 });
 
 exports.sendSmsVerificationCode = catchAsync(async (req, res, next) => {
+  console.log('shalom')
   const result = await client.verify
     .services(process.env.TWILLO_SERVICE_SID)
     .verifications.create({
