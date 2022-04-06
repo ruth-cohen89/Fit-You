@@ -6,7 +6,6 @@ const refreshTokensSchema = new mongoose.Schema({
   token: String,
   expiryDate: Date,
 });
-
 refreshTokensSchema.statics.createToken = async function (user) {
   const expiredAt = new Date();
   expiredAt.setSeconds(
@@ -22,9 +21,8 @@ refreshTokensSchema.statics.createToken = async function (user) {
   return refreshToken.token;
 };
 
-refreshTokensSchema.statics.verifyExpiration = (token) =>{
-  console.log(token.expiryDate)
-  return token.expiryDate.getSeconds() < new Date().getSeconds();
-}
+refreshTokensSchema.statics.verifyExpiration = (token) =>
+  token.expiryDate.getSeconds() < new Date().getSeconds();
+
 const RefreshToken = mongoose.model('RefreshToken', refreshTokensSchema);
 module.exports = RefreshToken;
