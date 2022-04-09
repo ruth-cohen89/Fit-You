@@ -30,6 +30,7 @@
     "nodemailer": "^6.7.3",
     "nodemailer-sendgrid": "^1.0.3",
     "nodemon": "^2.0.15",
+    "path": "^0.12.7",
     "pug": "^3.0.2",
     "sharp": "^0.30.3",
     "twilio": "^3.76.0",
