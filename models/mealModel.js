@@ -5,8 +5,17 @@ const mealSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Please provide name of meal.'],
+    unique: true,
   },
-  time: Date,
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    //required: [true, 'Meal must belong to a program'],
+  },
+  dayOfWeek: String,
+  //required: [true, 'Which day are you going to eat this meal?'],
+
+  hour: Number,
   calories: {
     type: Number,
     required: [true, 'Please provide amount of calories.'],

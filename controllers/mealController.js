@@ -3,6 +3,9 @@ const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 
+exports.isEnoughCalories = (req, res, next) => {
+  
+};
 exports.createMeal = factory.createOne(Meal);
 exports.getAllmeals = factory.getAll(Meal);
 exports.getMeal = factory.getOne(Meal);

@@ -10,10 +10,14 @@ const programSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
+    unique: true,
     required: [true, 'Program must belong to a user'],
   },
   completeDate: Date,
-  caloriesPerDay: Number,
+  caloriesPerDay: {
+    type: Number,
+    required: [true, 'How many calories should you eat every day?'],
+  },
   proteinPerDay: Number,
   fatPerDay: Number,
   CrabsPerDay: Number,
@@ -24,6 +28,11 @@ const programSchema = new mongoose.Schema({
       required: [true, 'Program must contain some meals!'],
     },
   ],
+  numberOfWorkouts: {
+    type: Number,
+    minLength: 2,
+    required: [true, 'Get your body moving, buddy!'],
+  },
   workouts: [
     {
       type: mongoose.Schema.ObjectId,
@@ -31,6 +40,22 @@ const programSchema = new mongoose.Schema({
       required: [true, 'Program must contain some workouts!'],
     },
   ],
+});
+
+programSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'meals',
+    select: '-__v',
+  });
+  next();
+});
+
+programSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'workouts',
+    select: '-__v',
+  });
+  next();
 });
 
 const Program = mongoose.model('Program', programSchema);
