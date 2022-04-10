@@ -1,8 +1,11 @@
 const express = require('express');
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
+const mealRouter = require('./mealRoutes');
 
 const router = express.Router();
+
+router.use('/:userId/meals', mealRouter);
 
 router.post('/signup', authController.signup);
 router.post('/emailConfirm/:token', authController.emailConfirm);

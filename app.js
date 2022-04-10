@@ -15,7 +15,8 @@ const compression = require('compression');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const userRouter = require('./routes/userRoutes');
-const mealsRouter = require('./routes/mealRoutes');
+const mealRouter = require('./routes/mealRoutes');
+const programRouter = require('./routes/programRoutes');
 
 const app = express();
 
@@ -70,7 +71,8 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/v1/users', userRouter);
-app.use('/api/v1/meals', mealsRouter);
+app.use('/api/v1/meals', mealRouter);
+app.use('/api/v1/programs', programRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server 🙄`, 404));
