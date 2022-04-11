@@ -16,6 +16,7 @@ const mealSchema = new mongoose.Schema({
   numOfServings: {
     default: 1,
   },
+  // per meal
   calories: {
     type: Number,
     required: [true, 'Please provide amount of calories.'],
@@ -33,19 +34,6 @@ const mealSchema = new mongoose.Schema({
     ref: 'Food',
     required: [true, 'What do you want to eat?'],
     minLength: 1,
-  },
-  dayOfWeek: {
-    type: String,
-    required: [true, 'Which day are you willing to eat this meal?.'],
-    enum: [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wedensday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-    ],
   },
   hour: Number,
 });
