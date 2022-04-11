@@ -4,14 +4,14 @@ const authController = require('../controllers/authController');
 
 const router = express.Router({ mergeParams: true });
 
-router
-  .route('/')
-  .post(authController.protect, mealController.createMeal)
-  .get(mealController.getAllmeals);
+// router
+//   .route('/')
+//   .post(authController.protect, mealController.createMeal)
+//   .get(mealController.getAllmeals);
 
-router
-  .route('/:id')
-  .get(mealController.getMeal);
+// router
+//   .route('/:id')
+//   .get(mealController.getMeal);
 //   .patch(
 //     mealController.protect,
 //     mealController.restrictTo('admin'),

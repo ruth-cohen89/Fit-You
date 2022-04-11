@@ -92,7 +92,6 @@ exports.emailConfirm = catchAsync(async (req, res, next) => {
 });
 
 exports.sendSmsVerificationCode = catchAsync(async (req, res, next) => {
-  console.log('shalom');
   const result = await client.verify
     .services(process.env.TWILLO_SERVICE_SID)
     .verifications.create({

@@ -71,8 +71,9 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/v1/users', userRouter);
-app.use('/api/v1/meals', mealRouter);
+//app.use('/api/v1/meals', mealRouter);
 app.use('/api/v1/programs', programRouter);
+app.use('/api/v1/mealPrograms', programRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server 🙄`, 404));
