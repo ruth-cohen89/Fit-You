@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 
 // Daily meal plan, every day different plan
-const mealPlanSchema = new mongoose.Schema({
+const dailymealPlanSchema = new mongoose.Schema({
   //per day
   calories: {
     type: Number,
@@ -27,7 +27,7 @@ const mealPlanSchema = new mongoose.Schema({
   ],
   dayOfWeek: {
     type: String,
-    required: [true, 'Which day are you willing to eat this meal?.'],
+    required: [true, 'Which day are you going to eat those meals?.'],
     enum: [
       'Sunday',
       'Monday',
@@ -40,5 +40,5 @@ const mealPlanSchema = new mongoose.Schema({
   },
 });
 
-const MealPlan = mongoose.model('Meal', mealPlanSchema);
-module.exports = MealPlan;
+const dailyMealPlan = mongoose.model('Meal', dailymealPlanSchema);
+module.exports = dailyMealPlan;

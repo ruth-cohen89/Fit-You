@@ -9,17 +9,19 @@ const mealSchema = new mongoose.Schema({
     enum: ['breakfast', 'lunch', 'dinner', 'snack'],
   },
   slug: String,
-  user: {
+  dailyMealPlan: {
     type: mongoose.Schema.ObjectId,
-    ref: 'User',
+    ref: 'dailyMealPlan',
   },
   numOfServings: {
     default: 1,
   },
-  // per meal
+
+  // per meal לכתוב פה את הrequired nutrients שהןא מכניס ולאחר מכן לבדוק אם המאכלים שהוא הכניס עומדים בזה,אם שלילי נאמר לו להקטין כמויות
+  // Planned macros for the meal beforeahead
   calories: {
     type: Number,
-    required: [true, 'Please provide amount of calories.'],
+    required: [true, 'Please provide amount of calories .'],
   },
   protein: {
     type: Number,
@@ -32,7 +34,7 @@ const mealSchema = new mongoose.Schema({
   foods: {
     type: mongoose.Schema.ObjectId,
     ref: 'Food',
-    required: [true, 'What do you want to eat?'],
+    required: [true, 'What foods would you like to eat in this meal? :)'],
     minLength: 1,
   },
   hour: Number,

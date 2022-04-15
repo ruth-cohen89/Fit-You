@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
+//const validator = require('validator');
 
 const programSchema = new mongoose.Schema({
   type: {
@@ -14,32 +14,25 @@ const programSchema = new mongoose.Schema({
     required: [true, 'Program must belong to a user'],
   },
   completeDate: Date,
+
+  // optional?
   caloriesPerDay: {
     type: Number,
     required: [true, 'How many calories should you eat every day?'],
   },
-  proteinPerDay: Number,
-  fatPerDay: Number,
-  CrabsPerDay: Number,
-  meals: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Meal',
-      required: [true, 'Program must contain some meals!'],
-    },
-  ],
-  numberOfWorkouts: {
-    type: Number,
-    minLength: 2,
-    required: [true, 'Get your body moving, buddy!'],
+  mealPlan: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'MealPlan',
   },
-  workouts: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Workout',
-      required: [true, 'Program must contain some workouts!'],
-    },
-  ],
+  // workoutPlan: {
+  //   type: mongoose.Schema.ObjectId,
+  //   ref: 'WorkoutPlan',
+  // },
+  // numberOfWorkouts: {
+  //   type: Number,
+  //   minLength: 2,
+  //   required: [true, 'Get your body moving, buddy!'],
+  // },
 });
 
 programSchema.pre(/^find/, function (next) {

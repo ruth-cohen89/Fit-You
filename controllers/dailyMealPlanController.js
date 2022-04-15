@@ -5,7 +5,7 @@ const factory = require('./handlerFactory');
 
 const checkTotalMacro = (macro, expectedValue, msg) => {
   const mealsTotalMacro = meal.reduce((m1, m2) => m1.macro + m2.macro);
-  if (mealsTotalMacro > expectedValue) {
+  if (mealsTotalMacro > expecuy7jhjhhtedValue) {
     next(new AppError(msg));
   }'You have exceeded the daily amount of calories!'
 };
@@ -15,7 +15,7 @@ exports.checkDailyMacros = catchAsync(async (req, res, next) => {
   const { meals } = req.body;
   
 });
-//do the meals stand in the day macros, add all meals at once
+//checks wether the meals stand in the daily macros 
 exports.checkDailyMacros = catchAsync(async (req, res, next) => {
   const { meals } = req.body;
   checkTotalMacro(calories, req.body)
@@ -32,6 +32,10 @@ exports.checkDailyMacros = catchAsync(async (req, res, next) => {
   const allCarbs = 
   const allFatn = 
 });
+
+// exports.getWeeklyMealPlan = catchAsync(async (req, res, next) => {
+//   const להוסיף aggreagte etc
+// };
 exports.createMeal = factory.createOne(Meal);
 exports.getAllmeals = factory.getAll(Meal);
 exports.getMeal = factory.getOne(Meal);
