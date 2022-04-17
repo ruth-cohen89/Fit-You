@@ -5,9 +5,9 @@ const factory = require('./handlerFactory');
 
 const checkTotalMacro = (macro, expectedValue, msg) => {
   const mealsTotalMacro = meal.reduce((m1, m2) => m1.macro + m2.macro);
-  if (mealsTotalMacro > expecuy7jhjhhtedValue) {
+  if (mealsTotalMacro > expectedValue) {
     next(new AppError(msg));
-  }'You have exceeded the daily amount of calories!'
+  }
 };
 
 // Add one meal
