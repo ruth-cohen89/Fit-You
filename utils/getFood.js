@@ -8,17 +8,17 @@ const Food = require('../models/foodModel');
 dotenv.config({ path: './config.env' });
 //node ./utils/getFood.js --import
 
-// const DB = process.env.DATABASE.replace(
-//   '<PASSWORD>',
-//   process.env.DATABASE_PASSWORD
-// );
+const DB = process.env.DATABASE.replace(
+  '<PASSWORD>',
+  process.env.DATABASE_PASSWORD
+);
 
-// mongoose
-//   .connect(DB, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   })
-//   .then(() => console.log('Connected to DB 🙂'));
+mongoose
+  .connect(DB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log('Connected to DB 🙂'));
 
 const requestFood = catchAsync(async () => {
   const apiUrl =
@@ -29,44 +29,62 @@ const requestFood = catchAsync(async () => {
 });
 
 const createNewFood = catchAsync(async (ingr) => {
+  console.log(ingr)
   const apiUri = `https://api.edamam.com/api/food-database/v2/parser?app_id=${process.env.EDAMAM_APPID}&app_key=${process.env.EDAMAM_APPKEY}&ingr=${ingr}&nutrition-type=cooking&category=generic-foods`;
   const response = await fetch(apiUri);
   const data = await response.json();
-  console.log(data, 'ma');
+  //console.log(data, 'ma');
+  // eslint-disable-next-line prefer-destructuring
+  console.log(data)
+  const food = data.parsed[0].food;
+  console.log(food);
   const newFood = await Food.create({
-    id: data.foodId,
-    name: data.label,
-    foodId: data.foodId,
-    calories: data.nutrients.ENERC_KCAL,
-    protein: data.nutrients.PROCNT,
-    fat: data.nutrients.FAT,
-    carbs: data.nutrients.CHOCDF,
-    fiber: data.nutrients.FIBTG,
-    image: data.image,
+    id: food.foodId,
+    name: food.label,
+    foodId: food.foodId,
+
+    nutrients: {
+      calories: food.nutrients.ENERC_KCAL,
+      protein: food.nutrients.PROCNT,
+      fat: food.nutrients.FAT,
+      carbs: food.nutrients.CHOCDF,
+      fiber: food.nutrients.FIBTG,
+    },
+    image: food.image,
   });
   console.log(newFood, 'new food here');
 });
 
 const importFood = async () => {
   try {
-    const basicProducts = ['Chocolate', 'milk', 'cucumber', 'tomato', 'pepper'];
-    // 'orange',
-    // 'salmon',
-    // 'fish',
-    // 'dennis',
-    // 'oatmeal',
-    // 'apple',
-    // 'yogurt',
-    // 'bread',
-    // 'pita',
-    // 'cheese',
-    // 'bamba',
-    // 'candy',
-    // let data = '';
+    const basicProducts = [
+      'Chocolate',
+      'milk',
+      'cucumber',
+      'tomato',
+      'pepper',
+      'orange',
+      'salmon',
+      'fish',
+      'pizza',
+      'oatmeal',
+      'yogurt',
+      'apple',
+      'bread',
+      'pita',
+      'cheese',
+      'candy',
+    ];
+    const promises = [];
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < basicProducts.length; i++) {
-      createNewFood(basicProducts[i]);
+      promises.push(createNewFood(basicProducts[i]));
     }
+    // eslint-disable-next-line no-restricted-syntax
+    //for (const e of basicProducts) {
+    // eslint-disable-next-line no-await-in-loop
+    // await createNewFood(e);
+    //}
   } catch (err) {
     console.log(err);
   }
@@ -83,14 +101,12 @@ const deleteFood = async () => {
   }
   process.exit();
 };
-importFood();
 
-//if (process.argv[2] === '--import') {
-//   requestFood();
-//   importFood();
-// } else if (process.argv[2] === '--delete') {
-//   deleteFood();
-// }
+if (process.argv[2] === '--import') {
+  importFood();
+} else if (process.argv[2] === '--delete') {
+  deleteFood();
+}
 
 // exports.searchFood = catchAsync(async (req, res, next) => {
 //   const { ingr } = req.body;
