@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
+//const validator = require('validator');
 
 // Daily meal plan, every day different plan
 const dailymealPlanSchema = new mongoose.Schema({
@@ -21,8 +21,8 @@ const dailymealPlanSchema = new mongoose.Schema({
   },
   meals: [
     {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Meal',
+      numOfServings: Number,
+      hour: Number,
     },
   ],
   dayOfWeek: {
