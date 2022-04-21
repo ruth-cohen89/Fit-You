@@ -35,7 +35,7 @@ const mealSchema = new mongoose.Schema({
   //type: mongoose.Schema.ObjectId,
   //ref: 'Food',
   //required: [true, 'What foods would you like to eat in this meal? :)'],
-  //minLength: 1,
+  minLength: 1,
 });
 
 mealSchema.pre('save', function (next) {
@@ -43,6 +43,12 @@ mealSchema.pre('save', function (next) {
   next();
 });
 
+mealSchema.pre(/^find/, function (next) {
+  this.populate({
+    select: '-__v',
+  });
+  next();
+});
 // mealSchema.pre('save', function (req, next) {
 //   this.calories = req.body.calories * req.body.numOfServings;
 //   next();

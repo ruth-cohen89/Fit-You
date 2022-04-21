@@ -8,8 +8,8 @@ const foodSchema = new mongoose.Schema({
     required: [true, 'Please provide name of food.'],
     unique: true,
   },
-  foodId: String,
-  label: String,
+  //food id from the external API
+  //foodId: String,
   nutrients: {
     calories: {
       type: Number,
@@ -23,12 +23,30 @@ const foodSchema = new mongoose.Schema({
     carbs: Number,
     fiber: Number,
   },
+  defaultServing: {
+    name: String,
+    weight: Number,
+  },
+  measures: [
+    {
+      _id: false,
+      name: String,
+      weight: Number,
+    },
+  ],
   image: String,
 });
 
-// mealSchema.pre('save', function (next) {
-//   this.slug = slugify(this.name, { lower: true });
-//   next();
-// });
+foodSchema.pre('save', function (next) {
+  this.slug = slugify(this.name, { lower: true });
+  next();
+});
+
+foodSchema.pre(/^find/, function (next) {
+  this.populate({
+    select: '-__v',
+  });
+  next();
+});
 const Food = mongoose.model('Food', foodSchema);
 module.exports = Food;
