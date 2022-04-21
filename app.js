@@ -17,7 +17,7 @@ const globalErrorHandler = require('./controllers/errorController');
 const userRouter = require('./routes/userRoutes');
 const mealRouter = require('./routes/mealRoutes');
 const programRouter = require('./routes/programRoutes');
-const getFood = require('./utils/getFood');
+const getFood = require('./utils/importFoods');
 
 const app = express();
 
