@@ -35,7 +35,6 @@ const mealSchema = new mongoose.Schema({
   //type: mongoose.Schema.ObjectId,
   //ref: 'Food',
   //required: [true, 'What foods would you like to eat in this meal? :)'],
-  minLength: 1,
 });
 
 mealSchema.pre('save', function (next) {

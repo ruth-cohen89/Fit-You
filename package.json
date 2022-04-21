@@ -6,7 +6,7 @@
     "main": false
   },
   "scripts": {
-    "dev": "nodemon server.js",
+    "start": "nodemon server.js",
     "prod": "SET NODE_ENV=production&&nodemon server.js",
     "debug": "ndb server.js"
   },

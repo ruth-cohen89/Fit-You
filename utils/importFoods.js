@@ -44,7 +44,7 @@ const createNewFood = catchAsync(async (ingr) => {
     },
 
     defaultServing: {
-      name: 'grams',
+      name: 'gram',
       weight: 100,
     },
     measures: filteredMeasures,

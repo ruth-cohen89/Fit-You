@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
+//const validator = require('validator');
 const slugify = require('slugify');
 
 const foodSchema = new mongoose.Schema({
@@ -42,11 +42,11 @@ foodSchema.pre('save', function (next) {
   next();
 });
 
-foodSchema.pre(/^find/, function (next) {
-  this.populate({
-    select: '-__v',
-  });
-  next();
-});
+// foodSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     select: '-__v',
+//   });
+//   next();
+// });
 const Food = mongoose.model('Food', foodSchema);
 module.exports = Food;
