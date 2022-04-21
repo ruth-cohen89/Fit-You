@@ -34,11 +34,13 @@ const foodSchema = new mongoose.Schema({
       weight: Number,
     },
   ],
+  proteinCalorieRation: Number,
   image: String,
 });
 
 foodSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
+  this.proteinCalorieRatio = this.nutrients.protein / this.nutrients.calories;
   next();
 });
 
