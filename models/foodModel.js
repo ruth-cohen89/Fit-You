@@ -34,7 +34,7 @@ const foodSchema = new mongoose.Schema({
       weight: Number,
     },
   ],
-  proteinCalorieRation: Number,
+  proteinCalorieRatio: Number,
   image: String,
 });
 

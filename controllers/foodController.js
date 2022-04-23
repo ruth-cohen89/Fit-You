@@ -4,9 +4,10 @@ const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 
 exports.aliasTopFoods = (req, res, next) => {
-  req.query.limit = '10';//TODO: this
-  req.query.sort = 'nutrients.calories,protein';
-  req.query.fields = 'name,nutrients,protein';
+  req.query.limit = '10';
+  req.query.sort = '-proteinCalorieRatio';
+  req.query.fields =
+    'name,proteinCalorieRatio,nutrients.protein,nutrients.calories';
   next();
 };
 
