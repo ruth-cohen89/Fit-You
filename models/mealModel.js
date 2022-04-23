@@ -12,6 +12,7 @@ const mealSchema = new mongoose.Schema({
     enum: ['breakfast', 'lunch', 'dinner', 'snack'],
   },
   slug: String,
+
   // calculating macros for the meal at creation
   calories: {
     type: Number,
@@ -27,13 +28,13 @@ const mealSchema = new mongoose.Schema({
   // foodIds
   foods: [
     {
-      type: String,
+      type: mongoose.Schema.ObjectId,
       required: [true, 'What foods would you like to eat?'],
     },
   ],
 });
 
-mealSchema.pre('save', function (next) {
+mealSchema.pre('save', function (req, res, next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
