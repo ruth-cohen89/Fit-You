@@ -3,41 +3,38 @@ const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 
-const checkTotalMacro = (macro, expectedValue, msg) => {
-  const mealsTotalMacro = meal.reduce((m1, m2) => m1.macro + m2.macro);
-  if (mealsTotalMacro > expectedValue) {
-    next(new AppError(msg));
+const checkTotalMacro = catchAsync(async (macro, targetMacro, name, next) => {
+  if (macro > targetMacro) {
+    next(new AppError(`You have exceeded the daily amount of ${name}!`));
   }
-};
-
-// Add one meal
-exports.checkDailyMacros = catchAsync(async (req, res, next) => {
-  const { meals } = req.body;
-  
-});
-//checks wether the meals stand in the daily macros 
-exports.checkDailyMacros = catchAsync(async (req, res, next) => {
-  const { meals } = req.body;
-  checkTotalMacro(calories, req.body)
-  const mealsCalories = meal.reduce((m1, m2) => m1.calories + m2.calories);
-  if (mealsCalories > req.body.calories) {
-    next(new AppError('You have exceeded the daily amount of calories!'))
-  }
-  if (req.body.protein) {
-
-    const allProtein = 
-  }
-
-  if
-  const allCarbs = 
-  const allFatn = 
 });
 
-// exports.getWeeklyMealPlan = catchAsync(async (req, res, next) => {
-//   const להוסיף aggreagte etc
-// };
-exports.createMeal = factory.createOne(Meal);
-exports.getAllmeals = factory.getAll(Meal);
-exports.getMeal = factory.getOne(Meal);
-exports.updateMeal = factory.updateOne(Meal);
-exports.deleteMeal = factory.deleteOne(Meal);
+// Check whether the inserted meals stand in the required daily macros
+exports.checkDailyMacros = catchAsync(async (req, res, next) => {
+  const { meals } = req.body;
+
+  const totalCalories = meals.reduce((m1, m2) => m1.calories + m2.calories);
+  checkTotalMacro(totalCalories, req.body.calories, 'calories', next);
+
+  if (req.body.calories) {
+    const totalProtein = meals.reduce((m1, m2) => m1.protein + m2.protein);
+    checkTotalMacro(totalProtein, req.body.protein, 'protein', next);
+  }
+
+  if (req.body.carbs) {
+    const totalCarbs = meals.reduce((m1, m2) => m1.carbs + m2.carbs);
+    checkTotalMacro(totalCarbs, req.body.carbs, 'carbs', next);
+  }
+
+  if (req.body.fats) {
+    const totalFats = meals.reduce((m1, m2) => m1.fats + m2.fats);
+    checkTotalMacro(totalFats, req.body.fats, 'fats', next);
+  }
+  next();
+});
+
+exports.createMealPlan = factory.createOne(Meal);
+exports.getAllMealPlans = factory.getAll(Meal);
+exports.getMealPlan = factory.getOne(Meal);
+exports.updateMealPlan = factory.updateOne(Meal);
+exports.deleteMealPlan = factory.deleteOne(Meal);

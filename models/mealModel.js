@@ -1,22 +1,21 @@
 const mongoose = require('mongoose');
-//const validator = require('validator');
 const slugify = require('slugify');
 
 const mealSchema = new mongoose.Schema({
+  dailyMealPlan: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'dailyMealPlan',
+  },
   name: {
     type: String,
     required: [true, 'Please provide name of meal.'],
     enum: ['breakfast', 'lunch', 'dinner', 'snack'],
   },
   slug: String,
-  dailyMealPlan: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'dailyMealPlan',
-  },
   // calculating macros for the meal at creation
   calories: {
     type: Number,
-    required: [true, 'Please provide amount of calories .'],
+    required: [true, 'Please provide amount of calories.'],
   },
   protein: {
     type: Number,
@@ -32,9 +31,6 @@ const mealSchema = new mongoose.Schema({
       required: [true, 'What foods would you like to eat?'],
     },
   ],
-  //type: mongoose.Schema.ObjectId,
-  //ref: 'Food',
-  //required: [true, 'What foods would you like to eat in this meal? :)'],
 });
 
 mealSchema.pre('save', function (next) {
