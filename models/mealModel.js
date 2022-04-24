@@ -50,21 +50,17 @@ const mealSchema = new mongoose.Schema({
 //mealSchema.index({ name: 1, ratingsAverage: -1 }, { unique: true });
 
 // TODO: fix the work
-mealSchema.pre('save', function (req, next) {
-  console.log(this.foods[0].food)
-  this.populate({
-    path: 'guides',
-    select: '-__v -passwordChangedAt',
-  });
+mealSchema.pre('save', async function (req, next) {
+  //console.log(this.foods[0].food)
+  // this.populate({
+  //   path: 'foods.food',
+  //   select: '-__v -passwordChangedAt',
+  // });
   console.log(typeof this._id);
-  const foodIds = this.foods.map((e) => e.food.valueOf());
-  const found = Food.find({ _id: foodIds[0] });
-  console.log(found, 'please')
-  const foods = Food.find({ _id: { $in: foodIds } });
-  console.log(foodIds, 'now');
-  console.log(foods, 'later')
-  const macros = ['calories', 'protein', 'carbs', 'fat', 'fiber'];
+  const foodIds = this.foods.map((e) => e.food);
+  const foods = await Food.find({ _id: { $in: foodIds } });
 
+  const macros = ['calories', 'protein', 'carbs', 'fat', 'fiber'];
   const { measure, amount } = req.body.foods.servingSize;
 
   // eslint-disable-next-line no-plusplus
