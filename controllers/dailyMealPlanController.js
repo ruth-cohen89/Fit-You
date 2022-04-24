@@ -9,27 +9,35 @@ const checkTotalMacro = catchAsync(async (macro, targetMacro, name, next) => {
   }
 });
 
+// TODO: create a helper function
 // Check whether the inserted meals stand in the required daily macros
 exports.checkDailyMacros = catchAsync(async (req, res, next) => {
-  const { meals } = req.body;
-
-  const totalCalories = meals.reduce((m1, m2) => m1.calories + m2.calories);
-  checkTotalMacro(totalCalories, req.body.calories, 'calories', next);
+  // eslint-disable-next-line prefer-destructuring
+  const meals = req.body.meals;
 
   if (req.body.calories) {
-    const totalProtein = meals.reduce((m1, m2) => m1.protein + m2.protein);
+    const totalProtein = meals.reduce((m1, m2) => ({
+      calories: m1.calories + m2.calories,
+    })).calories;
+    checkTotalMacro(totalCalories, req.body.calories, 'calories', next);
+  }
+
+  if (req.body.protein) {
+    const totalProtein = meals.reduce((m1, m2) => ({
+      protein: m1.protein + m2.protein,
+    })).protein;
     checkTotalMacro(totalProtein, req.body.protein, 'protein', next);
   }
 
-  if (req.body.carbs) {
-    const totalCarbs = meals.reduce((m1, m2) => m1.carbs + m2.carbs);
-    checkTotalMacro(totalCarbs, req.body.carbs, 'carbs', next);
-  }
+  // if (req.body.carbs) {
+  //   const totalCarbs = meals.reduce((m1, m2) => m1.carbs + m2.carbs);
+  //   checkTotalMacro(totalCarbs, req.body.carbs, 'carbs', next);
+  // }
 
-  if (req.body.fats) {
-    const totalFats = meals.reduce((m1, m2) => m1.fats + m2.fats);
-    checkTotalMacro(totalFats, req.body.fats, 'fats', next);
-  }
+  // if (req.body.fats) {
+  //   const totalFats = meals.reduce((m1, m2) => m1.fats + m2.fats);
+  //   checkTotalMacro(totalFats, req.body.fats, 'fats', next);
+  // }
   next();
 });
 

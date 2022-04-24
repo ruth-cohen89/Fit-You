@@ -1,26 +1,30 @@
 const express = require('express');
-const mealController = require('../controllers/mealController');
+const mealPlanController = require('../controllers/dailyMealPlanController');
 const authController = require('../controllers/authController');
 
 const router = express.Router({ mergeParams: true });
 
 router
   .route('/')
-  .post(authController.protect, mealController.createMeal)
-  .get(mealController.getAllmeals);
+  .post(
+    authController.protect,
+    mealPlanController.checkDailyMacros,
+    mealPlanController.createMealPlan
+  )
+  .get(mealPlanController.getAllMealPlans);
 
 router
   .route('/:id')
-  .get(mealController.getMeal)
+  .get(mealPlanController.getMealPlan)
   .patch(
     authController.protect,
     authController.restrictTo('admin'),
-    mealController.updateMeal
+    mealPlanController.updateMealPlan
   )
   .delete(
     authController.protect,
     authController.restrictTo('admin'),
-    mealController.deleteMeal
+    mealPlanController.deleteMealPlan
   );
 
 module.exports = router;

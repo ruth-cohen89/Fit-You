@@ -15,6 +15,7 @@ const compression = require('compression');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const userRouter = require('./routes/userRoutes');
+const mealPlanRouter = require('./routes/dailyMealPlanRoutes');
 const mealRouter = require('./routes/mealRoutes');
 const foodRouter = require('./routes/foodRoutes');
 const programRouter = require('./routes/programRoutes');
@@ -73,9 +74,10 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/v1/users', userRouter);
-//app.use('/api/v1/meals', mealRouter);
-app.use('/api/v1/programs', programRouter);
-app.use('/api/v1/mealPrograms', mealRouter);
+app.use('/api/v1/meals', mealRouter);
+//app.use('/api/v1/programs', programRouter);
+//app.use('/api/v1/mealPrograms', mealRouter);
+app.use('/api/v1/mealPlans', mealPlanRouter);
 app.use('/api/v1/foods', foodRouter);
 //app.use('/api/v1/searchFood', getFood);
 

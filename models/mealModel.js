@@ -51,25 +51,35 @@ const mealSchema = new mongoose.Schema({
 
 // TODO: fix the work
 mealSchema.pre('save', async function (req, next) {
-  //console.log(this.foods[0].food)
-  // this.populate({
-  //   path: 'foods.food',
-  //   select: '-__v -passwordChangedAt',
-  // });
-  console.log(typeof this._id);
+
+  console.log(this, 'com');
   const foodIds = this.foods.map((e) => e.food);
+
   const foods = await Food.find({ _id: { $in: foodIds } });
 
+  console.log(foods, 'later1');
   const macros = ['calories', 'protein', 'carbs', 'fat', 'fiber'];
-  const { measure, amount } = req.body.foods.servingSize;
 
+  //const { measure, amount } = this.foods.servingSize;
+  //const newFoodMeasures = this.foods.forEach((food) => food.foods.measure)
+  newFoods = {}
+  for(let i=0; i<this.foods.length; i++) {
+    newFoods[this.foods[i].food] = this.foods[i].servingSize
+  }
+
+  console.log(newFoods)
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i < macros.length; i++) {
+    // eslint-disable-next-line no-unused-vars
+    foods.forEach((food) => food.measures[])
+
     const { macro, weight } = foods.map((f) => ({
       macro: f.nutrients.macros[i],
-      weight: f.measures.find((m) => m.name === measure).weight,
+      weight: f.measures.find(
+        ((m) => m.name === this.foods[i].servingSize.measure).weight
+      ), //* this.foods[i].servingSize.amount
     }));
-    this.macros[i] = macro * ((weight * amount) / 100); // 2 times 4 cubes of chocolate is 25*2=50g
+    //this.macros[i] = macro * ((weight * amount) / 100); // 2 times 4 cubes of chocolate is 25*2=50g
   }
   next();
 });

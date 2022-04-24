@@ -1,12 +1,29 @@
 const mongoose = require('mongoose');
-//const validator = require('validator');
 
-// Daily meal plan, every day different plan
+// We need the mealPlan schema since
+// if we would not have it then the user could enter
+// each meal with different amount of calories and
+// we need to make sure that the daily calories remain the
+// same since creation
+// we have to keep the same daily calories somewhere throw all the user program
+// and also link it to the user, this makes it organized
 const dailymealPlanSchema = new mongoose.Schema({
-  //per day
+  dayOfWeek: {
+    type: String,
+    required: [true, 'Choose a day.'],
+    enum: [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wedensday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ],
+  },
   calories: {
     type: Number,
-    required: [true, 'Please provide amount of calories per day.'],
+    required: [true, 'Please provide amount of calories.'],
   },
   protein: {
     type: Number,
@@ -21,23 +38,11 @@ const dailymealPlanSchema = new mongoose.Schema({
   },
   meals: [
     {
-      numOfServings: Number,
-      hour: Number,
+      type: mongoose.Schema.ObjectId,
+      ref: 'Meal',
+      required: [true, 'What meals would you like to have? :)'],
     },
   ],
-  dayOfWeek: {
-    type: String,
-    required: [true, 'Which day are you going to eat those meals?.'],
-    enum: [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wedensday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-    ],
-  },
 });
 
 const dailyMealPlan = mongoose.model('Meal', dailymealPlanSchema);

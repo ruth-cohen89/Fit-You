@@ -10,6 +10,9 @@ const foodSchema = new mongoose.Schema({
   },
   //food id from the external API
   //foodId: String,
+  // all required so that the calculated
+  // macros for a meal will be accurate
+  // Add more macros?
   nutrients: {
     calories: {
       type: Number,
@@ -19,9 +22,18 @@ const foodSchema = new mongoose.Schema({
       type: Number,
       required: [true, 'How much protein is in this food?'],
     },
-    fat: Number,
-    carbs: Number,
-    fiber: Number,
+    fat: {
+      type: Number,
+      required: [true, 'How much fat is in this food?'],
+    },
+    carbs: {
+      type: Number,
+      required: [true, 'How much fat is in this food?'],
+    },
+    fiber: {
+      type: Number,
+      required: [true, 'How much fiber is in this food?'],
+    },
   },
   defaultServing: {
     name: String,
