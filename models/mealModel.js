@@ -40,8 +40,11 @@ const mealSchema = new mongoose.Schema({
         },
         amount: {
           type: Number,
-          required: [true, 'How much would you like to eat, dear?'],
         },
+        weight: {
+          type: Number,
+          required: [true, 'Please provide weight of serving in grams'],
+        }
       },
     },
   ],
@@ -52,35 +55,23 @@ const mealSchema = new mongoose.Schema({
 // TODO: fix the work
 mealSchema.pre('save', async function (req, next) {
 
-  console.log(this, 'com');
+  // console.log(this, 'com');
   const foodIds = this.foods.map((e) => e.food);
-
   const foods = await Food.find({ _id: { $in: foodIds } });
 
-  console.log(foods, 'later1');
-  const macros = ['calories', 'protein', 'carbs', 'fat', 'fiber'];
+  //console.log(foods, 'later1');
+  // we cant run macro[i] since the nutrients and macroNames
+  // may not always be in the same order... we have to use 2 loops.
+  const macroNames = ['calories', 'protein', 'carbs', 'fat', 'fiber'];
 
-  //const { measure, amount } = this.foods.servingSize;
-  //const newFoodMeasures = this.foods.forEach((food) => food.foods.measure)
-  newFoods = {}
-  for(let i=0; i<this.foods.length; i++) {
-    newFoods[this.foods[i].food] = this.foods[i].servingSize
-  }
-
-  console.log(newFoods)
   // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < macros.length; i++) {
-    // eslint-disable-next-line no-unused-vars
-    foods.forEach((food) => food.measures[])
-
-    const { macro, weight } = foods.map((f) => ({
-      macro: f.nutrients.macros[i],
-      weight: f.measures.find(
-        ((m) => m.name === this.foods[i].servingSize.measure).weight
-      ), //* this.foods[i].servingSize.amount
+  for (let i = 0; i < macroNames.length; i++) {
+    const AllFoodsMacro = foods.reduce((f1, f2) => ({
+      macro: (f.nutrients.macros[i] * (this.foods.food.servingSize.weight / 100)) , 
     }));
-    //this.macros[i] = macro * ((weight * amount) / 100); // 2 times 4 cubes of chocolate is 25*2=50g
+    this.macros[i] = AllFoodsMacro;
   }
+  //macro * ((weight * amount) / 100);
   next();
 });
 
