@@ -8,11 +8,6 @@ const foodSchema = new mongoose.Schema({
     required: [true, 'Please provide name of food.'],
     unique: true,
   },
-  //food id from the external API
-  //foodId: String,
-  // all required so that the calculated
-  // macros for a meal will be accurate
-  // Add more macros?
   nutrients: {
     calories: {
       type: Number,

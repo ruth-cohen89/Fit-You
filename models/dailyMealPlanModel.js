@@ -7,8 +7,10 @@ const mongoose = require('mongoose');
 // same since creation
 // we have to keep the same daily calories somewhere throw all the user program
 // and also link it to the user, this makes it organized
+// also, if the user wished to change a meal he would have to
+// change the whole dailyMealPlan schema (bad), and could harm the daily values.
 const dailymealPlanSchema = new mongoose.Schema({
-  dayOfWeek: {
+  day: {
     type: String,
     required: [true, 'Choose a day.'],
     enum: [
@@ -21,15 +23,6 @@ const dailymealPlanSchema = new mongoose.Schema({
       'Saturday',
     ],
   },
-  calories: {
-    type: Number,
-    required: [true, 'Please provide amount of calories.'],
-  },
-  protein: {
-    type: Number,
-  },
-  carbs: Number,
-  fat: Number,
   user: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
@@ -38,12 +31,34 @@ const dailymealPlanSchema = new mongoose.Schema({
   },
   meals: [
     {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Meal',
-      required: [true, 'What meals would you like to have? :)'],
+      id: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Meal',
+        required: [true, 'What meals would you like to have? :)'],
+      },
+      name: {
+        type: String,
+        enum: ['breakfast', 'lunch', 'dinner', 'snack'],
+        required: [true, 'What type of meal is it?'],
+      },
+      hour: String,
     },
   ],
 });
 
 const dailyMealPlan = mongoose.model('Meal', dailymealPlanSchema);
 module.exports = dailyMealPlan;
+
+// TODO: think about how to create the validation and wether or not keep
+// the daily macros here/ calculted from meals?
+// For each macro that the user provides we need to
+// validate wether the meals stand it
+// calories: {
+//   type: Number,
+//   required: [true, 'Please provide amount of calories.'],
+// },
+// protein: {
+//   type: Number,
+// },
+// carbs: Number,
+// fat: Number,

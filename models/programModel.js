@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 //const validator = require('validator');
 
+// we need programSchema to vestigate i=on the mealSchema o
+// otherwise the user may create as many times dailyMealPlans with different macros
+// we need to keep the macros here since it is constant, and not changing by day...
+// we cant store all of this data in the user since it is not relevant to the user itself
+// wont be modular, (completeDate is not relevant to the user password and name)
 const programSchema = new mongoose.Schema({
   type: {
     type: String,
@@ -14,16 +19,23 @@ const programSchema = new mongoose.Schema({
     required: [true, 'Program must belong to a user'],
   },
   completeDate: Date,
-
-  // optional?
   caloriesPerDay: {
     type: Number,
     required: [true, 'How many calories should you eat every day?'],
   },
-  mealPlan: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'MealPlan',
+  proteinPerDay: {
+    type: Number,
+    required: [true, 'How many calories should you eat every day?'],
   },
+  carbsPerDay: Number,
+  fatPerDay: Number,
+  fiberPerDay: Number,
+  dailyMealPlans: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'MealPlan',
+    },
+  ],
   // workoutPlan: {
   //   type: mongoose.Schema.ObjectId,
   //   ref: 'WorkoutPlan',

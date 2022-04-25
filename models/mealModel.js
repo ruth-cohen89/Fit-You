@@ -10,20 +10,24 @@ const mealSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'dailyMealPlan',
   },
-  name: {
-    type: String,
-    required: [true, 'Please provide name of meal.'],
-    enum: ['breakfast', 'lunch', 'dinner', 'snack'], 
-  },
+  // each meal is only for one mealplan
+  // otherwishe change in a meal will result change
+  // in all the other mealplans - unwanted
+  // instead the user will be able to ask meal
+  // templates examples
+  // name: {
+  //   type: String,
+  //   required: [true, 'Please provide name of meal.'],
+  //   enum: ['breakfast', 'lunch', 'dinner', 'snack'],
+  // },
   hour: String,
   slug: String,
-  // calculating macros for the meal at create and update
-  calories: Number,
-  protein: Number,
-  fat: Number,
-  carbs: Number,
-
-  // foodIds
+  nutrients: {
+    calories: Number,
+    protein: Number,
+    fat: Number,
+    carbs: Number,
+  },
   foods: [
     {
       _id: false,
@@ -44,7 +48,7 @@ const mealSchema = new mongoose.Schema({
         weight: {
           type: Number,
           required: [true, 'Please provide weight of serving in grams'],
-        }
+        },
       },
     },
   ],
@@ -52,26 +56,44 @@ const mealSchema = new mongoose.Schema({
 
 //mealSchema.index({ name: 1, ratingsAverage: -1 }, { unique: true });
 
+// const calculateMacro = (macro) => {
+
+// }
 // TODO: fix the work
-mealSchema.pre('save', async function (req, next) {
-
-  // console.log(this, 'com');
-  const foodIds = this.foods.map((e) => e.food);
-  const foods = await Food.find({ _id: { $in: foodIds } });
-
-  //console.log(foods, 'later1');
-  // we cant run macro[i] since the nutrients and macroNames
-  // may not always be in the same order... we have to use 2 loops.
-  const macroNames = ['calories', 'protein', 'carbs', 'fat', 'fiber'];
+mealSchema.pre('save', async function (req, res, next) {
+  const foodIds = [];
+  const mapOfWeights = {}; // foodID: weight(grams)
 
   // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < macroNames.length; i++) {
-    const AllFoodsMacro = foods.reduce((f1, f2) => ({
-      macro: (f.nutrients.macros[i] * (this.foods.food.servingSize.weight / 100)) , 
-    }));
-    this.macros[i] = AllFoodsMacro;
+  for (let i = 0; i < this.foods.length; i++) {
+    mapOfWeights[this.foods[i].food] = this.foods[i].servingSize.weight;
+    foodIds[i] = this.foods[i].food;
   }
-  //macro * ((weight * amount) / 100);
+  const foodObjects = await Food.find({ _id: { $in: foodIds } });
+
+  const AllFoodsMacros = foodObjects.reduce((f1, f2) => ({
+    calories:
+      f1.nutrients.calories * (mapOfWeights[f1._id] / 100) +
+      f2.nutrients.calories * (mapOfWeights[f2._id] / 100),
+    protein:
+      f1.nutrients.protein * (mapOfWeights[f1._id] / 100) +
+      f2.nutrients.protein * (mapOfWeights[f2._id] / 100),
+    carbs:
+      f1.nutrients.carbs * (mapOfWeights[f1._id] / 100) +
+      f2.nutrients.carbs * (mapOfWeights[f2._id] / 100),
+    fat:
+      f1.nutrients.fat * (mapOfWeights[f1._id] / 100) +
+      f2.nutrients.fat * (mapOfWeights[f2._id] / 100),
+    fiber:
+      f1.nutrients.fiber * (mapOfWeights[f1._id] / 100) +
+      f2.nutrients.fiber * (mapOfWeights[f2._id] / 100),
+  }));
+  this.nutrients.calories = AllFoodsMacros.calories;
+  this.nutrients.protein = AllFoodsMacros.protein;
+  this.nutrients.carbs = AllFoodsMacros.carbs;
+  this.nutrients.fat = AllFoodsMacros.fat;
+  this.nutrients.fiber = AllFoodsMacros.fiber;
+
   next();
 });
 
@@ -90,10 +112,3 @@ mealSchema.pre(/^find/, function (next) {
 
 const Meal = mongoose.model('Meal', mealSchema);
 module.exports = Meal;
-
-  // const measuresOfFood = foods[0];
-  // const foundMeasureObject = measuresOfFood.find((m) => m === measure );
-  // const weight = foundMeasureObject.weight;
-
-  //const meausreInGrams = Food.find({measures:})
-  // calcuting if user inserted in grams or not at all
