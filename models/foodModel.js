@@ -38,7 +38,7 @@ const foodSchema = new mongoose.Schema({
     {
       _id: false,
       name: String,
-      weight: Number,
+      weight: Number, // in grams
     },
   ],
   proteinCalorieRatio: Number,
@@ -51,11 +51,5 @@ foodSchema.pre('save', function (next) {
   next();
 });
 
-// foodSchema.pre(/^find/, function (next) {
-//   this.populate({
-//     select: '-__v',
-//   });
-//   next();
-// });
 const Food = mongoose.model('Food', foodSchema);
 module.exports = Food;
