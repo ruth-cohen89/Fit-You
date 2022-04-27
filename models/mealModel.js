@@ -109,12 +109,14 @@ const calculateFoodGrams = async (foodObjects) => {
 
 // TODO: fix the work
 mealSchema.pre('save', async function (req, res, next) {
-  const foodIds = this.foods((f) => f.id);
+  const foodIds = this.foods.map((f) => f.id);
+  console.log(String(this.foods[0].id));
   console.log(foodIds);
 
   const foodObjects = await Food.find({ _id: { $in: foodIds } });
-  await calculateFoodGrams.call(this, foodObjects);
-  await calculateMealNutrients.call(this, foodObjects);
+  console.log(foodObjects)
+  // await calculateFoodGrams.call(this, foodObjects);
+  // await calculateMealNutrients.call(this, foodObjects);
 
   next();
 });
