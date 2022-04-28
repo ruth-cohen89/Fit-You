@@ -1,7 +1,6 @@
 /* eslint-disable no-plusplus */
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-//const { ObjectID } = require('mongodb');
 const Food = require('./foodModel');
 
 // since meals in mealPlans are updated all the time,
@@ -37,86 +36,69 @@ const mealSchema = new mongoose.Schema({
         ref: 'Food',
         required: [true, 'What foods would you like to eat?'],
       },
-      // in grams
       servingSize: {
         measure: {
           type: String,
-          default: 'gram', // gram/tbsp/...
+          default: 'gram',
           required: [true, 'Provide food measure.'],
         },
         amount: {
-          type: Number, //100 /1
+          type: Number,
           required: [true, 'How many servings of this food?'],
         },
+        // If grams is specified amount has no meaning
         grams: {
-          type: Number, // 100 /25
+          type: Number,
         },
       },
     },
   ],
 });
 
-const calculateMealNutrients = async (foodObjects) => {
-  const mapOfWeights = {}; // foodID: weight(grams)
-  // map of foodId:weight(g)
-  for (let i = 0; i < this.foods.length; i++) {
-    mapOfWeights[this.foods[i].id] = this.foods[i].servingSize.weight;
+const calculateMealNutrients = async function (foodObjects) {
+  let calories = 0;
+  let protein = 0;
+  let carbs = 0;
+  let fat = 0;
+  let fiber = 0;
+  for (let i = 0; i < foodObjects.length; i++) {
+    const { grams } = this.foods[i].servingSize;
+    calories += foodObjects[i].nutrients.calories * (grams / 100);
+    protein += foodObjects[i].nutrients.protein * (grams / 100);
+    carbs += foodObjects[i].nutrients.carbs * (grams / 100);
+    fat += foodObjects[i].nutrients.fat * (grams / 100);
+    fiber += foodObjects[i].nutrients.fiber * (grams / 100);
   }
-  console.log(mapOfWeights);
 
-  const AllFoodsMacros = foodObjects.reduce((f1, f2) => ({
-    calories:
-      f1.nutrients.calories * (mapOfWeights[f1._id] / 100) +
-      f2.nutrients.calories * (mapOfWeights[f2._id] / 100),
-    protein:
-      f1.nutrients.protein * (mapOfWeights[f1._id] / 100) +
-      f2.nutrients.protein * (mapOfWeights[f2._id] / 100),
-    carbs:
-      f1.nutrients.carbs * (mapOfWeights[f1._id] / 100) +
-      f2.nutrients.carbs * (mapOfWeights[f2._id] / 100),
-    fat:
-      f1.nutrients.fat * (mapOfWeights[f1._id] / 100) +
-      f2.nutrients.fat * (mapOfWeights[f2._id] / 100),
-    fiber:
-      f1.nutrients.fiber * (mapOfWeights[f1._id] / 100) +
-      f2.nutrients.fiber * (mapOfWeights[f2._id] / 100),
-  }));
-  this.nutrients.calories = AllFoodsMacros.calories;
-  this.nutrients.protein = AllFoodsMacros.protein;
-  this.nutrients.carbs = AllFoodsMacros.carbs;
-  this.nutrients.fat = AllFoodsMacros.fat;
-  this.nutrients.fiber = AllFoodsMacros.fiber;
+  this.nutrients.calories = calories;
+  this.nutrients.protein = protein;
+  this.nutrients.carbs = carbs;
+  this.nutrients.fat = fat;
+  this.nutrients.fiber = fiber;
 };
 
-const calculateFoodGrams = async (foodObjects) => {
-  // putting them both in alignment
-  this.foods.sort((a, b) => a.id - b.id);
-  foodObjects.sort((a, b) => a._id - b._id);
-
-  console.log(this.foods);
-  console.log(foodObjects);
-
+const calculateGramsOfFoods = async function (foodObjects) {
   for (let i = 0; i < this.foods.length; i++) {
-    //if user didn't specify grams - we specify it.
+    // If user didn't specify grams
     if (!this.foods[i].servingSize.grams) {
-      this.foods[i].servingSize.weight =
-        foodObjects[i].measures.find({
-          name: this.foods[i].name,
-        }).weight * this.foods[i].servingSize.amount;
+      this.foods[i].servingSize.grams =
+        foodObjects[i].measures.find(
+          (o) => o.name === this.foods[i].servingSize.measure
+        ).weight * this.foods[i].servingSize.amount;
     }
   }
 };
 
-// TODO: fix the work
 mealSchema.pre('save', async function (req, res, next) {
   const foodIds = this.foods.map((f) => f.id);
-  console.log(String(this.foods[0].id));
-  console.log(foodIds);
-
   const foodObjects = await Food.find({ _id: { $in: foodIds } });
-  console.log(foodObjects)
-  // await calculateFoodGrams.call(this, foodObjects);
-  // await calculateMealNutrients.call(this, foodObjects);
+
+  // Sorting for improving time complexity
+  this.foods.sort();
+  foodObjects.sort((a, b) => a._id - b._id);
+
+  await calculateGramsOfFoods.call(this, foodObjects);
+  await calculateMealNutrients.call(this, foodObjects);
 
   next();
 });
@@ -128,7 +110,6 @@ mealSchema.pre('save', function (req, res, next) {
 
 mealSchema.pre(/^find/, function (next) {
   this.populate({
-    // TODO: populate foods
     select: '-__v',
   });
   next();
