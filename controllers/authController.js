@@ -10,6 +10,7 @@ const RefreshToken = require('../models/refreshTokenModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const Email = require('../utils/email');
+const Meal = require('../models/mealModel');
 
 const signAccessToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, {

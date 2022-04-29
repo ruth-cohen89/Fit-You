@@ -18,6 +18,7 @@ const programSchema = new mongoose.Schema({
     unique: true,
     required: [true, 'Program must belong to a user'],
   },
+  //we have to keep it for the user, the program can be changed only by admin
   completeDate: Date,
   caloriesPerDay: {
     type: Number,
