@@ -1,6 +1,5 @@
 /* eslint-disable no-plusplus */
 const mongoose = require('mongoose');
-const slugify = require('slugify');
 const Food = require('./foodModel');
 
 // since meals in mealPlans are updated all the time,
@@ -10,18 +9,18 @@ const mealSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'dailyMealPlan',
   },
-  hour: String,
   // each meal is only for one mealplan
   // otherwishe change in a meal will result change
   // in all the other mealplans - unwanted
   // instead the user will be able to ask meal
   // templates examples
-  name: {
+  type: {
     type: String,
-    required: [true, 'Please provide name of meal.'],
-    enum: ['breakfast', 'lunch', 'dinner', 'snack'],
+    required: [
+      true,
+      'Please provide type of meal. (breakfast/lunch/dinner/snack)',
+    ],
   },
-  slug: String,
   nutrients: {
     calories: Number,
     protein: Number,
@@ -80,6 +79,7 @@ const calculateMealNutrients = async function (foodObjects) {
 const calculateGramsOfFoods = async function (foodObjects) {
   for (let i = 0; i < this.foods.length; i++) {
     // If user didn't specify grams
+
     if (!this.foods[i].servingSize.grams) {
       this.foods[i].servingSize.grams =
         foodObjects[i].measures.find(
@@ -89,29 +89,18 @@ const calculateGramsOfFoods = async function (foodObjects) {
   }
 };
 
-mealSchema.pre('save', async function (req, res, next) {
+mealSchema.pre('save', async function (next) {
   const foodIds = this.foods.map((f) => f.id);
   const foodObjects = await Food.find({ _id: { $in: foodIds } });
 
   // Sorting for improving time complexity
+
   this.foods.sort();
   foodObjects.sort((a, b) => a._id - b._id);
 
   await calculateGramsOfFoods.call(this, foodObjects);
   await calculateMealNutrients.call(this, foodObjects);
 
-  next();
-});
-
-mealSchema.pre('save', function (req, res, next) {
-  this.slug = slugify(this.name, { lower: true });
-  next();
-});
-
-mealSchema.pre(/^find/, function (next) {
-  this.populate({
-    select: '-__v',
-  });
   next();
 });
 

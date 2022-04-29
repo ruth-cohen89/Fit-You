@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 // and also link it to the user, this makes it organized
 // also, if the user wished to change a meal he would have to
 // change the whole dailyMealPlan schema (bad), and could harm the daily values.
-const dailymealPlanSchema = new mongoose.Schema({
+const mealPlanSchema = new mongoose.Schema({
   day: {
     type: String,
     required: [true, 'Choose a day.'],
@@ -29,24 +29,24 @@ const dailymealPlanSchema = new mongoose.Schema({
     required: [true, 'Meal plan must belong to a user'],
     unique: true,
   },
-  meals: [
-    {
-      id: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Meal',
-        required: [true, 'What meals would you like to have? :)'],
-      },
-      name: {
-        type: String,
-        enum: ['breakfast', 'lunch', 'dinner', 'snack'],
-        required: [true, 'What type of meal is it?'],
-      },
-      hour: String,
-    },
-  ],
+  // meals: [
+  //   {
+  //     id: {
+  //       type: mongoose.Schema.ObjectId,
+  //       ref: 'Meal',
+  //       required: [true, 'What meals would you like to have? :)'],
+  //     },
+  //     name: {
+  //       type: String,
+  //       enum: ['breakfast', 'lunch', 'dinner', 'snack'],
+  //       required: [true, 'What type of meal is it?'],
+  //     },
+  //     hour: String,
+  //   },
+  // ],
 });
 
-const dailyMealPlan = mongoose.model('Meal', dailymealPlanSchema);
+const dailyMealPlan = mongoose.model('Meal', mealPlanSchema);
 module.exports = dailyMealPlan;
 
 // TODO: think about how to create the validation and wether or not keep
