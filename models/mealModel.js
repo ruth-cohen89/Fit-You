@@ -1,6 +1,12 @@
 /* eslint-disable no-plusplus */
 const mongoose = require('mongoose');
 const Food = require('./foodModel');
+const Recipe = require('./recipeModel');
+
+// const itemSchema = new mongoose.Schema(
+//   {},
+//   { discriminatorKey: 'kind', _id: false }
+// );
 
 // since meals in mealPlans are updated all the time,
 // I keep a seperate model for the meal itself
@@ -42,14 +48,15 @@ const mealSchema = new mongoose.Schema({
           type: Number,
           required: [true, 'How many servings of this food?'],
         },
-        // If grams is specified amount has no meaning
+        // If grams is specified, amount has no meaning
         grams: {
           type: Number,
         },
       },
     },
   },
-  items: [
+  //items: [itemSchema],
+  foods: [
     {
       _id: false,
       id: {
@@ -124,6 +131,9 @@ mealSchema.pre('save', async function (next) {
 
   next();
 });
+
+//mealSchema.path('items').discriminator('food', Food);
+//mealSchema.path('items').discriminator('recipe', Recipe);
 
 const Meal = mongoose.model('Meal', mealSchema);
 module.exports = Meal;
