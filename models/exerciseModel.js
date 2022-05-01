@@ -2,20 +2,20 @@
 const mongoose = require('mongoose');
 const Food = require('./foodModel');
 
-const excerciseSchema = new mongoose.Schema({
-  dailyExcercisePlan: {
+const exerciseSchema = new mongoose.Schema({
+  exercisePlan: {
     type: mongoose.Schema.ObjectId,
-    ref: 'dailyExcercisePlan',
+    ref: 'exercisePlan',
   },
 
   type: {
     type: String,
-    required: [true, 'Please provide type of excercise.'],
+    required: [true, 'Please provide type of exercise.'],
     enum: ['aerobic', 'liftingWeights', 'bodyWeight'],
   },
   calorieBurn: Number,
-  duration: Number,
+  totalDuration: Number,
 });
 
-const Excercise = mongoose.model('excercise', excerciseSchema);
-module.exports = Excercise;
+const Exercise = mongoose.model('exercise', exerciseSchema);
+module.exports = Exercise;
