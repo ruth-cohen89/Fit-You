@@ -21,25 +21,46 @@ const mealSchema = new mongoose.Schema({
       'Please provide type of meal. (breakfast/lunch/dinner/snack)',
     ],
   },
-  nutrients: {
+  totalNutrients: {
     calories: Number,
     protein: Number,
     fat: Number,
     carbs: Number,
   },
-  foods: [
+  recipe: {
+    _id: false,
+    id: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Recipe',
+    },
+    servingSize: {
+      measure: {
+        type: String,
+        default: 'gram',
+        required: [true, 'Provide reciepe measure.'],
+        amount: {
+          type: Number,
+          required: [true, 'How many servings of this food?'],
+        },
+        // If grams is specified amount has no meaning
+        grams: {
+          type: Number,
+        },
+      },
+    },
+  },
+  items: [
     {
       _id: false,
       id: {
         type: mongoose.Schema.ObjectId,
         ref: 'Food',
-        required: [true, 'What foods would you like to eat?'],
       },
       servingSize: {
         measure: {
           type: String,
           default: 'gram',
-          required: [true, 'Provide food measure.'],
+          required: [true, 'Provide food measure.'], // TODO: required?
         },
         amount: {
           type: Number,
