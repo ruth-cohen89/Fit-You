@@ -17,7 +17,7 @@ const recipeSchema = new mongoose.Schema({
   proteinCalorieRatio: Number,
   image: String,
 
-  totalNutrients: {
+  nutrients: {
     // per total weight
     calories: {
       type: Number,

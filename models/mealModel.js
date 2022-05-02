@@ -1,7 +1,9 @@
 /* eslint-disable no-plusplus */
 const mongoose = require('mongoose');
+const ObjectId = require('mongodb').ObjectID;
 const Food = require('./foodModel');
 const Program = require('./programModel');
+
 
 // const itemSchema = new mongoose.Schema(
 //   {},
@@ -37,41 +39,24 @@ const mealSchema = new mongoose.Schema({
     fat: Number,
     carbs: Number,
   },
-  // recipe: {
-  //   _id: false,
-  //   id: {
-  //     type: mongoose.Schema.ObjectId, type 
-  //     ref: 'Recipe',
-  //   },
-  //   servingSize: {
-  //     measure: {
-  //       type: String,
-  //       default: 'gram',
-  //       required: [true, 'Provide reciepe measure.'],
-  //       amount: {
-  //         type: Number,
-  //         required: [true, 'How many servings of this food?'],
-  //       },
-  //       // If grams is specified, amount has no meaning
-  //       grams: {
-  //         type: Number,
-  //       },
-  //     },
-  //   },
-  // },
-  //items: [itemSchema], insert recpies here
-  foods: [
+  items: [
     {
       _id: false,
-      id: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Food',
+      itemId: {
+        type: ObjectId,
+        refPath: 'itemType',
+        required: true,
+      },
+      itemType: {
+        type: String,
+        required: [true, 'Choose between Food and Recipe'],
+        enum: ['Food', 'Recipe'],
       },
       servingSize: {
         measure: {
           type: String,
           default: 'gram',
-          required: [true, 'Provide food measure.'], // TODO: required?
+          required: [true, 'Provide food measure.'],
         },
         amount: {
           type: Number,
@@ -141,13 +126,18 @@ const calculateGramsOfFoods = async function (foodObjects) {
 };
 
 mealSchema.pre('save', async function (next) {
-  const foodIds = this.foods.map((f) => f.id);
-  const foodObjects = await Food.find({ _id: { $in: foodIds } });
+  const itemIds = this.items.map((f) => f.id);
+  // eslint-disable-next-line no-use-before-define
+  const itemObjects = await Meal.find({ _id: { $in: itemIds } })
+    .populate('items')
+    .sort({ _id: 1 });
+  console.log(itemObjects)
+  //const foodObjects = await Food.find({ _id: { $in: itemIds } });
   //await Meal.find({name : item.name}).count().exec();
-  // Sorting for improving time complexity
 
+  // Sorting for improving time complexity
   this.foods.sort();
-  foodObjects.sort((a, b) => a._id - b._id);
+  //foodObjects.sort((a, b) => a._id - b._id);
 
   await calculateGramsOfFoods.call(this, foodObjects);
   await calculateMealNutrients.call(this, foodObjects);
