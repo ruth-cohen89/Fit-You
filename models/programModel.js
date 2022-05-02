@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 //const validator = require('validator');
 
-// we need programSchema to vestigate i=on the mealSchema o
+// we need programSchema to vestigate the mealSchema. here daily cals are saved for the user through all his pr.
 // otherwise the user may create as many times dailyMealPlans with different macros
 // we need to keep the macros here since it is constant, and not changing by day...
 // we cant store all of this data in the user since it is not relevant to the user itself
