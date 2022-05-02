@@ -5,6 +5,10 @@ const authController = require('../controllers/authController');
 const router = express.Router({ mergeParams: true });
 
 router
+  .route('/:id/foods/:foodId')
+  .delete(authController.protect, mealController.deleteFoodFromMeal);
+
+router
   .route('/')
   .post(authController.protect, mealController.createMeal)
   .get(mealController.getAllmeals);

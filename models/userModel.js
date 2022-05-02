@@ -110,10 +110,5 @@ userSchema.methods.createEmailConfirmToken = function () {
   return confirmToken;
 };
 
-//delete mongoose.connection.models.User;
 const User = mongoose.model('User', userSchema);
-//module.exports = mongoose.models.user || mongoose.model('Users', userSchema);
 module.exports = User;
-
-//const userSchema = mongoose.Schema({...});
-//export mongoose.model('users', usersSchema);

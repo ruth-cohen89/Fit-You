@@ -10,40 +10,41 @@ const mongoose = require('mongoose');
 // also, if the user wished to change a meal he would have to
 // change the whole dailyMealPlan schema (bad), and could harm the daily values.
 const mealPlanSchema = new mongoose.Schema({
-  day: {
-    type: String,
-    required: [true, 'Choose a day.'],
-    enum: [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wedensday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-    ],
-  },
-  user: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'User',
-    required: [true, 'Meal plan must belong to a user'],
-    unique: true,
-  },
-  // meals: [
-  //   {
-  //     id: {
-  //       type: mongoose.Schema.ObjectId,
-  //       ref: 'Meal',
-  //       required: [true, 'What meals would you like to have? :)'],
-  //     },
-  //     name: {
-  //       type: String,
-  //       enum: ['breakfast', 'lunch', 'dinner', 'snack'],
-  //       required: [true, 'What type of meal is it?'],
-  //     },
-  //     hour: String,
-  //   },
-  // ],
+  caloriesPerDay: Number,
+  // day: {
+  //   type: String,
+  //   required: [true, 'Choose a day.'],
+  //   enum: [
+  //     'Sunday',
+  //     'Monday',
+  //     'Tuesday',
+  //     'Wedensday',
+  //     'Thursday',
+  //     'Friday',
+  //     'Saturday',
+  //   ],
+  // },
+  // program: {
+  //   type: mongoose.Schema.ObjectId,
+  //   ref: 'Program',
+  //   required: [true, 'Meal plan must belong to a program'],
+  //   unique: true,
+  // },
+  meals: [
+    {
+      id: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Meal',
+        required: [true, 'What meals would you like to have? :)'],
+      },
+      name: {
+        type: String,
+        enum: ['breakfast', 'lunch', 'dinner', 'snack'],
+        required: [true, 'What type of meal is it?'],
+      },
+      hour: String,
+    },
+  ],
 });
 
 const dailyMealPlan = mongoose.model('Meal', mealPlanSchema);

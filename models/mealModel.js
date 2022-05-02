@@ -1,7 +1,7 @@
 /* eslint-disable no-plusplus */
 const mongoose = require('mongoose');
 const Food = require('./foodModel');
-const Recipe = require('./recipeModel');
+const Program = require('./programModel');
 
 // const itemSchema = new mongoose.Schema(
 //   {},
@@ -11,9 +11,13 @@ const Recipe = require('./recipeModel');
 // since meals in mealPlans are updated all the time,
 // I keep a seperate model for the meal itself
 const mealSchema = new mongoose.Schema({
-  dailyMealPlan: {
+  program: {
     type: mongoose.Schema.ObjectId,
-    ref: 'dailyMealPlan',
+    ref: 'programSchema',
+  },
+  date: {
+    type: Date,
+    required: [true, 'when will you eat this meal?'],
   },
   // each meal is only for one mealplan
   // otherwishe change in a meal will result change
@@ -33,29 +37,29 @@ const mealSchema = new mongoose.Schema({
     fat: Number,
     carbs: Number,
   },
-  recipe: {
-    _id: false,
-    id: {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Recipe',
-    },
-    servingSize: {
-      measure: {
-        type: String,
-        default: 'gram',
-        required: [true, 'Provide reciepe measure.'],
-        amount: {
-          type: Number,
-          required: [true, 'How many servings of this food?'],
-        },
-        // If grams is specified, amount has no meaning
-        grams: {
-          type: Number,
-        },
-      },
-    },
-  },
-  //items: [itemSchema],
+  // recipe: {
+  //   _id: false,
+  //   id: {
+  //     type: mongoose.Schema.ObjectId, type 
+  //     ref: 'Recipe',
+  //   },
+  //   servingSize: {
+  //     measure: {
+  //       type: String,
+  //       default: 'gram',
+  //       required: [true, 'Provide reciepe measure.'],
+  //       amount: {
+  //         type: Number,
+  //         required: [true, 'How many servings of this food?'],
+  //       },
+  //       // If grams is specified, amount has no meaning
+  //       grams: {
+  //         type: Number,
+  //       },
+  //     },
+  //   },
+  // },
+  //items: [itemSchema], insert recpies here
   foods: [
     {
       _id: false,
@@ -82,6 +86,25 @@ const mealSchema = new mongoose.Schema({
   ],
 });
 
+// before creating and updating a meal
+const isEnoughCalories = async function () {
+  const dailyCalories = Program.find({ _id: this.program }).caloriesPerDay;
+
+  // eslint-disable-next-line no-use-before-define
+  const dailyMeals = await Meal.find({
+    program: this.program,
+    date: this.date,
+  });
+  if (dailyMeals) {
+    const calories = dailyMeals.map((m) => m.totalNutrients.calories);
+    if (calories + this.totalNutrients.calories > dailyCalories) {
+      console.error(
+        'Too many calories for that day, please change one of the meals'
+      );
+    }
+  }
+};
+
 const calculateMealNutrients = async function (foodObjects) {
   let calories = 0;
   let protein = 0;
@@ -97,11 +120,11 @@ const calculateMealNutrients = async function (foodObjects) {
     fiber += foodObjects[i].nutrients.fiber * (grams / 100);
   }
 
-  this.nutrients.calories = calories;
-  this.nutrients.protein = protein;
-  this.nutrients.carbs = carbs;
-  this.nutrients.fat = fat;
-  this.nutrients.fiber = fiber;
+  this.totalNutrients.calories = calories;
+  this.totalNutrients.protein = protein;
+  this.totalNutrients.carbs = carbs;
+  this.totalNutrients.fat = fat;
+  this.totalNutrients.fiber = fiber;
 };
 
 const calculateGramsOfFoods = async function (foodObjects) {
@@ -120,7 +143,7 @@ const calculateGramsOfFoods = async function (foodObjects) {
 mealSchema.pre('save', async function (next) {
   const foodIds = this.foods.map((f) => f.id);
   const foodObjects = await Food.find({ _id: { $in: foodIds } });
-
+  //await Meal.find({name : item.name}).count().exec();
   // Sorting for improving time complexity
 
   this.foods.sort();
@@ -128,7 +151,7 @@ mealSchema.pre('save', async function (next) {
 
   await calculateGramsOfFoods.call(this, foodObjects);
   await calculateMealNutrients.call(this, foodObjects);
-
+  await isEnoughCalories.call(this);
   next();
 });
 
