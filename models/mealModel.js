@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable no-plusplus */
 const mongoose = require('mongoose');
 const ObjectId = require('mongodb').ObjectID;
@@ -56,11 +57,11 @@ const mealSchema = new mongoose.Schema({
         measure: {
           type: String,
           default: 'gram',
-          required: [true, 'Provide food measure.'],
+          required: [true, 'Provide item measure.'],
         },
         amount: {
           type: Number,
-          required: [true, 'How many servings of this food?'],
+          required: [true, 'How many servings of this item?'],
         },
         // If grams is specified amount has no meaning
         grams: {
@@ -90,19 +91,20 @@ const isEnoughCalories = async function () {
   }
 };
 
-const calculateMealNutrients = async function (foodObjects) {
+const calculateMealNutrients = async function (itemObjects) {
   let calories = 0;
   let protein = 0;
   let carbs = 0;
   let fat = 0;
   let fiber = 0;
-  for (let i = 0; i < foodObjects.length; i++) {
-    const { grams } = this.foods[i].servingSize;
-    calories += foodObjects[i].nutrients.calories * (grams / 100);
-    protein += foodObjects[i].nutrients.protein * (grams / 100);
-    carbs += foodObjects[i].nutrients.carbs * (grams / 100);
-    fat += foodObjects[i].nutrients.fat * (grams / 100);
-    fiber += foodObjects[i].nutrients.fiber * (grams / 100);
+  console.log(itemObjects)
+  for (let i = 0; i < itemObjects.length; i++) {
+    const { grams } = this.items[i].servingSize;
+    calories += itemObjects[i].nutrients.calories * (grams / 100);
+    protein += itemObjects[i].nutrients.protein * (grams / 100);
+    carbs += itemObjects[i].nutrients.carbs * (grams / 100);
+    fat += itemObjects[i].nutrients.fat * (grams / 100);
+    fiber += itemObjects[i].nutrients.fiber * (grams / 100);
   }
 
   this.totalNutrients.calories = calories;
@@ -112,42 +114,52 @@ const calculateMealNutrients = async function (foodObjects) {
   this.totalNutrients.fiber = fiber;
 };
 
-const calculateGramsOfFoods = async function (foodObjects) {
-  for (let i = 0; i < this.foods.length; i++) {
+const calculateGramsOfItems = async function (itemObjects) {
+  for (let i = 0; i < this.items.length; i++) {
     // If user didn't specify grams
 
-    if (!this.foods[i].servingSize.grams) {
-      this.foods[i].servingSize.grams =
-        foodObjects[i].measures.find(
-          (o) => o.name === this.foods[i].servingSize.measure
-        ).weight * this.foods[i].servingSize.amount;
+    if (!this.items[i].servingSize.grams) {
+      this.items[i].servingSize.grams =
+        itemObjects[i].measures.find(
+          (o) => o.name === this.items[i].servingSize.measure
+        ).weight * this.items[i].servingSize.amount;
     }
   }
 };
 
 mealSchema.pre('save', async function (next) {
   const itemIds = this.items.map((f) => f.itemId);
-  // eslint-disable-next-line no-use-before-define
-  const itemObjects = await Meal.find()
-    .populate('itemId')
-    .sort();
-  console.log(itemObjects.items.populate('itemId'))
-  //console.log(this)
-  //console.log(this.populate('itemId'))
-  //const foodObjects = await Food.find({ _id: { $in: itemIds } });
+
+  //const itemObjects = await Meal.find().populate('items.itemId').sort();
+  //console.log(itemObjects[0].items)
+
+  const itemPromises = this.items.map(async (item) => {
+    if (item.itemType === 'Food') {
+      //return
+      const bitch = await Food.find({ _id: { $in: itemIds } });
+      return bitch;
+    }
+  });
+  let itemObjects = await Promise.all(itemPromises)
+  itemObjects = itemObjects[0];
+
+  //   }
+  // }
+  //const itemObjects = await item.find({ _id: { $in: itemIds } });
   //await Meal.find({name : item.name}).count().exec();
 
   // Sorting for improving time complexity
-  //this.foods.sort();
-  //foodObjects.sort((a, b) => a._id - b._id);
+  this.items.sort(); // by itemId
+  itemObjects.sort((a, b) => a._id - b._id);
 
-  // await calculateGramsOfFoods.call(this, foodObjects);
-  // await calculateMealNutrients.call(this, foodObjects);
-  // await isEnoughCalories.call(this);
+  //console.log(itemObjects)
+  await calculateGramsOfItems.call(this, itemObjects);
+  await calculateMealNutrients.call(this, itemObjects);
+  await isEnoughCalories.call(this);
   next();
 });
 
-//mealSchema.path('items').discriminator('food', Food);
+//mealSchema.path('items').discriminator('item', item);
 //mealSchema.path('items').discriminator('recipe', Recipe);
 
 const Meal = mongoose.model('Meal', mealSchema);
