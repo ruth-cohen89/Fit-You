@@ -8,10 +8,11 @@ const recipeSchema = new mongoose.Schema({
     required: [true, 'Please provide name of recipe.'],
     unique: true,
   },
-  foodId: String,
-  ingredientLines: [{ ingredient: String }],
-  healthLabels: [{ label: String }],
+  //foodId: String,
   url: String, //the recipe url +instructions
+  dietLabels: [{ type: String }],
+  healthLabels: [{ type: String }],
+  ingredientLines: [{ type: String }], // TODO: finish model according to the api and the importRecipe function
   yield: Number, // servings
   totalWeight: Number,
   proteinCalorieRatio: Number,
