@@ -43,7 +43,7 @@ const mealSchema = new mongoose.Schema({
     {
       _id: false,
       itemId: {
-        type: ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         refPath: 'itemType',
         required: true,
       },
@@ -126,22 +126,24 @@ const calculateGramsOfFoods = async function (foodObjects) {
 };
 
 mealSchema.pre('save', async function (next) {
-  const itemIds = this.items.map((f) => f.id);
+  const itemIds = this.items.map((f) => f.itemId);
   // eslint-disable-next-line no-use-before-define
-  const itemObjects = await Meal.find({ _id: { $in: itemIds } })
-    .populate('items')
-    .sort({ _id: 1 });
-  console.log(itemObjects)
+  const itemObjects = await Meal.find()
+    .populate('itemId')
+    .sort();
+  console.log(itemObjects.items.populate('itemId'))
+  //console.log(this)
+  //console.log(this.populate('itemId'))
   //const foodObjects = await Food.find({ _id: { $in: itemIds } });
   //await Meal.find({name : item.name}).count().exec();
 
   // Sorting for improving time complexity
-  this.foods.sort();
+  //this.foods.sort();
   //foodObjects.sort((a, b) => a._id - b._id);
 
-  await calculateGramsOfFoods.call(this, foodObjects);
-  await calculateMealNutrients.call(this, foodObjects);
-  await isEnoughCalories.call(this);
+  // await calculateGramsOfFoods.call(this, foodObjects);
+  // await calculateMealNutrients.call(this, foodObjects);
+  // await isEnoughCalories.call(this);
   next();
 });
 

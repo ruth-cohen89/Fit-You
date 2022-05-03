@@ -59,5 +59,5 @@ recipeSchema.pre('save', function (next) {
   next();
 });
 
-const Recipe = mongoose.model('recipe', recipeSchema);
+const Recipe = mongoose.model('Recipe', recipeSchema);
 module.exports = Recipe;
