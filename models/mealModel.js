@@ -5,7 +5,6 @@ const ObjectId = require('mongodb').ObjectID;
 const Food = require('./foodModel');
 const Program = require('./programModel');
 
-
 // const itemSchema = new mongoose.Schema(
 //   {},
 //   { discriminatorKey: 'kind', _id: false }
