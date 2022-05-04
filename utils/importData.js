@@ -61,39 +61,42 @@ const createNewRecipe = catchAsync(async (item) => {
   const response = await fetch(apiUri);
   const data = await response.json();
 
-  const recipe = data.hits[0].recipe;
-  // const foodMeasures = data.hints[0].measures;
-  // const filteredMeasures = foodMeasures.map((measure) => ({
-  //   name: measure.label,
-  //   weight: measure.weight,
-  // }));
+  const { recipe } = data.hits[0];
 
   const newRecipe = await Recipe.create({
     name: recipe.label,
-    image: recipe.image,
+    //image: recipe.image,
+    url: recipe.url,
+    yield: recipe.yield,
+    dietLabels: recipe.dietLabels,
+    healthLabels: recipe.healthLabels,
+    ingredients: recipe.ingredientLines,
+    totalWeight: recipe.totalWeight,
+    totalTime: recipe.totalTime,
+    mealType: recipe.mealType,
+    dishType: recipe.dishType,
 
-    ingredientLines: [{ ingredient: String }],
-    dietLabels: [{ label: String }], 
-    healthLabels: [{ label: String }],
-    url: recipe.url, // the recipe url +instructions
-    yield: recipe.yield, // servings
-    totalWeight: Number,
-    proteinCalorieRatio: Number,
-
-    image: String,
-    nutrients: {
-      calories: recipe.nutrients.ENERC_KCAL,
-      protein: recipe.nutrients.PROCNT,
-      fat: recipe.nutrients.FAT,
-      carbs: recipe.nutrients.CHOCDF,
-      fiber: recipe.nutrients.FIBTG,
+    totalNutrients: {
+      calories: recipe.totalNutrients.ENERC_KCAL.quantity,
+      fat: recipe.totalNutrients.FAT.quantity,
+      saturedFat: recipe.totalNutrients.FASAT.quantity,
+      transFat: recipe.totalNutrients.FATRN.quantity,
+      carbs: recipe.totalNutrients.CHOCDF.quantity,
+      fiber: recipe.totalNutrients.FIBTG.quantity,
+      sugars: recipe.totalNutrients.SUGAR.quantity,
+      protein: recipe.totalNutrients.PROCNT.quantity,
+      cholesterol: recipe.totalNutrients.CHOLE.quantity,
+      sodium: recipe.totalNutrients.NA.quantity,
+      calcium: recipe.totalNutrients.CA.quantity,
+      magnesium: recipe.totalNutrients.MG.quantity,
+      potassium: recipe.totalNutrients.K.quantity,
+      iron: recipe.totalNutrients.FE.quantity,
+      zinc: recipe.totalNutrients.ZN.quantity,
     },
-
     defaultServing: {
       name: 'gram',
       weight: 100,
     },
-    measures: filteredMeasures,
   });
   console.log(newRecipe, 'New recipe here');
 });
@@ -170,21 +173,18 @@ if (process.argv[2] === '--importFood') {
     'candy',
   ];
   importFood(basicProducts);
-
 } else if (process.argv[2] === '--deleteFood') {
   deleteFood();
-
 } else if (process.argv[2] === '--importRecipe') {
   const basicRecipes = [
     'salmon',
     'pasta',
     'chicken',
     'pizza',
-    'cream cheese cake'
+    'cream cheese cake',
   ];
   importRecipe(basicRecipes);
-
 } else if (process.argv[2] === '--deleteRecipe') {
   deleteRecipe();
-
+}
 // TODO: ix it and add process.exit() after all the foods are created
