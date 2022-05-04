@@ -3,13 +3,12 @@ const slugify = require('slugify');
 
 const recipeSchema = new mongoose.Schema({
   name: {
-    // label
     type: String,
     required: [true, 'Please provide name of recipe.'],
     unique: true,
   },
   //foodId: String,
-  url: String, //the recipe url + instructions
+  url: String,
   yield: Number, // servings
   dietLabels: [{ type: String }],
   healthLabels: [{ type: String }],
@@ -23,7 +22,7 @@ const recipeSchema = new mongoose.Schema({
   dishType: [{ type: String }],
   totalWeight: {
     type: Number,
-    required: [true, 'How much does it weight?'],
+    //required: [true, 'How much does it weight?'],
   },
 
   totalNutrients: {
