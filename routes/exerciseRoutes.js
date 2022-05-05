@@ -1,26 +1,26 @@
 const express = require('express');
-const workoutController = require('../controllers/workoutController');
+const exerciseController = require('../controllers/exerciseController');
 const authController = require('../controllers/authController');
 
 const router = express.Router({ mergeParams: true });
 
 router
   .route('/')
-  .get(workoutController.getAllWorkouts)
-  .post(authController.protect, workoutController.createWorkout);
+  .get(exerciseController.getAllExercises)
+  .post(authController.protect, exerciseController.createExercise);
 
 router
   .route('/:id')
-  .get(workoutController.getWorkout)
+  .get(exerciseController.getExercise)
   .patch(
     authController.protect,
     authController.restrictTo('admin'),
-    workoutController.updateWorkout
+    exerciseController.updateExercise
   )
   .delete(
     authController.protect,
     authController.restrictTo('admin'),
-    workoutController.deleteWorkout
+    exerciseController.deleteExercise
   );
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// Keep the macros here since it is constant, and not changing by day...
+// Keep the macros here since it is constant, and not changing by day
 const programSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.ObjectId,
@@ -19,7 +19,7 @@ const programSchema = new mongoose.Schema({
   },
   caloriesPerDay: {
     type: Number,
-    required: [true, 'How many calories would you consume every day? 🥨'],
+    required: [true, 'How many calories would you consume every day?🥨'],
   },
   proteinPerDay: {
     type: Number,
