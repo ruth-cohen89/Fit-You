@@ -1,30 +1,30 @@
 const express = require('express');
-const foodController = require('../controllers/foodController');
+const recipeController = require('../controllers/recipeController');
 const authController = require('../controllers/authController');
 
 const router = express.Router({ mergeParams: true });
 
 router
-  .route('/top-10-foods')
-  .get(foodController.aliasTopFoods, foodController.getAllFoods);
+  .route('/top-10-recipes')
+  .get(recipeController.aliasTopRecipes, recipeController.getAllRecipes);
 
 router
   .route('/')
-  .get(foodController.getAllFoods)
-  .post(authController.protect, foodController.createFood);
+  .get(recipeController.getAllRecipes)
+  .post(authController.protect, recipeController.createRecipe);
 
 router
   .route('/:id')
-  .get(foodController.getFood)
+  .get(recipeController.getRecipe)
   .patch(
     authController.protect,
     authController.restrictTo('admin'),
-    foodController.updateFood
+    recipeController.updateRecipe
   )
   .delete(
     authController.protect,
     authController.restrictTo('admin'),
-    foodController.deleteFood
+    recipeController.deleteRecipe
   );
 
 module.exports = router;

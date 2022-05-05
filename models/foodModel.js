@@ -8,37 +8,46 @@ const foodSchema = new mongoose.Schema({
     required: [true, 'Please provide name of food.'],
     unique: true,
   },
+  totalWeight: Number, // in grams
   nutrients: {
     calories: {
       type: Number,
-      required: [true, 'How many calories are in this food?'],
+      required: [true, 'How many calories?'],
     },
     protein: {
       type: Number,
-      required: [true, 'How much protein is in this food?'],
+      required: [true, 'How much protein?'],
     },
     fat: {
       type: Number,
-      required: [true, 'How much fat is in this food?'],
+      required: [true, 'How much fat?'],
     },
     carbs: {
       type: Number,
-      required: [true, 'How much fat is in this food?'],
+      required: [true, 'How many carbs?'],
     },
     fiber: {
       type: Number,
-      required: [true, 'How much fiber is in this food?'],
+      required: [true, 'How much fiber?'],
     },
   },
   defaultServing: {
     name: String,
     weight: Number,
+    calories: Number,
   },
   measures: [
     {
       _id: false,
-      name: String,
-      weight: Number, // in grams
+      name: {
+        type: String,
+        required: [true, 'Please provide measuring type (grams/cup/etc).'],
+      },
+      weight: {
+        type: Number,
+        required: [true, 'Please provide weight of measure in grams.'],
+      },
+      calories: Number,
     },
   ],
   proteinCalorieRatio: Number,

@@ -28,26 +28,26 @@ const recipeSchema = new mongoose.Schema({
   totalNutrients: {
     calories: {
       type: Number,
-      required: [true, 'How many calories are in this recipe?'],
+      required: [true, 'How many calories?'],
     },
     fat: {
       type: Number,
-      required: [true, 'How much fat is in this recipe?'],
+      required: [true, 'How much fat?'],
     },
     saturedFat: Number,
     transFat: Number,
     carbs: {
       type: Number,
-      required: [true, 'How many carbs are in the recipe?'],
+      required: [true, 'How many carbs?'],
     },
     fiber: {
       type: Number,
-      required: [true, 'How much fiber is in this recipe?'],
+      required: [true, 'How much fiber?'],
     },
     sugars: Number,
     protein: {
       type: Number,
-      required: [true, 'How much protein is in this recipe?'],
+      required: [true, 'How much protein?'],
     },
     cholesterol: Number,
     sodium: Number,
@@ -61,12 +61,20 @@ const recipeSchema = new mongoose.Schema({
   defaultServing: {
     name: String,
     weight: Number,
+    calories: Number,
   },
   measures: [
     {
       _id: false,
-      name: String,
-      weight: Number, // grams
+      name: {
+        type: String,
+        required: [true, 'Please provide measure type (grams/cup/etc).'],
+      },
+      weight: {
+        type: Number,
+        required: [true, 'Please provide weight of measure (in grams).'],
+      },
+      calories: Number,
     },
   ],
 });

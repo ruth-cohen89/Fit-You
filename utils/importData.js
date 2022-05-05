@@ -5,7 +5,7 @@ const catchAsync = require('./catchAsync');
 const Food = require('../models/foodModel');
 const Recipe = require('../models/recipeModel');
 
-// node ./utils/importData.js --importFood OR deleteFood
+// node ./utils/importData.js --importFood || deleteFood || importRecipe || deleteRecipe
 dotenv.config({ path: './config.env' });
 
 const DB = process.env.DATABASE.replace(

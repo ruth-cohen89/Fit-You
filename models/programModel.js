@@ -1,67 +1,37 @@
 const mongoose = require('mongoose');
-//const validator = require('validator');
 
-// we need programSchema to vestigate the mealSchema. here daily cals are saved for the user through all his pr.
-// otherwise the user may create as many times dailyMealPlans with different macros
-// we need to keep the macros here since it is constant, and not changing by day...
-// we cant store all of this data in the user since it is not relevant to the user itself
-// wont be modular, (completeDate is not relevant to the user password and name)
+// Keep the macros here since it is constant, and not changing by day...
 const programSchema = new mongoose.Schema({
-  type: {
-    type: String,
-    enum: ['mass', 'recomposition', 'losingFat'],
-    required: [true, 'Please choose type of program!'],
-  },
   user: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
     unique: true,
     required: [true, 'Program must belong to a user'],
   },
-  //we have to keep it for the user, the program can be changed only by admin
-  completeDate: Date,
+  type: {
+    type: String,
+    enum: ['losingFat', 'recomposition', 'mass'],
+    required: [true, 'Please choose type of program!'],
+  },
+  completeDate: {
+    type: Date,
+    required: [true, 'When will you reach your goal?'],
+  },
   caloriesPerDay: {
     type: Number,
-    required: [true, 'How many calories should you eat every day?'],
+    required: [true, 'How many calories would you consume every day? 🥨'],
   },
   proteinPerDay: {
     type: Number,
-    required: [true, 'How many calories should you eat every day?'],
+    required: [true, 'How much protein would you consume every day?'],
   },
   carbsPerDay: Number,
   fatPerDay: Number,
   fiberPerDay: Number,
-  dailyMealPlans: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'MealPlan',
-    },
-  ],
-  // workoutPlan: {
-  //   type: mongoose.Schema.ObjectId,
-  //   ref: 'WorkoutPlan',
-  // },
-  // numberOfWorkouts: {
-  //   type: Number,
-  //   minLength: 2,
-  //   required: [true, 'Get your body moving, buddy!'],
-  // },
-});
-
-programSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'meals',
-    select: '-__v',
-  });
-  next();
-});
-
-programSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'workouts',
-    select: '-__v',
-  });
-  next();
+  workoutsPerWeek: {
+    type: Number,
+    required: [true, 'Get your body moving 🔥'],
+  },
 });
 
 const Program = mongoose.model('Program', programSchema);
