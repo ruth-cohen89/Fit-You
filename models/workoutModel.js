@@ -2,17 +2,58 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 
 const workoutSchema = new mongoose.Schema({
+  program: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'programSchema',
+    required: [true, 'Please enter program id'],
+  },
+  link: String,
   name: {
     type: String,
-    required: [true, 'Workout must have a name ;)'],
   },
-  type: {
+  // For convinient
+  day: {
     type: String,
-    enum: ['Aerobic', 'BodyWeight', 'Weights'],
-    required: [true, 'Please choose type of program!'],
+    required: [true, 'Choose a day.'],
+    enum: [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wedensday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ],
   },
-  duration: Number,
-  link: String,
+
+  exercises: [
+    {
+      id: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'exercise',
+        required: [true, 'please enter exercise id :)'],
+      },
+      duration: {
+        type: Number,
+        required: [true, 'Please enter exercise duraion in minutes'],
+      },
+      weight: {
+        type: Number,
+      },
+      sets: {
+        type: Number,
+      },
+      reps: {
+        type: Number,
+      },
+      distance: {
+        type: Number,
+      },
+    },
+  ],
+
+  // Add total duration
+  totalDuration: Number,
   caloriesBurned: Number,
 });
 

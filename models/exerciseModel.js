@@ -1,21 +1,18 @@
-/* eslint-disable no-plusplus */
 const mongoose = require('mongoose');
-const Food = require('./foodModel');
 
 const exerciseSchema = new mongoose.Schema({
-  exercisePlan: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'exercisePlan',
+  name: {
+    type: String,
+    required: [true, 'Please provide name of exercise.'],
   },
-
   type: {
     type: String,
     required: [true, 'Please provide type of exercise.'],
-    enum: ['aerobic', 'liftingWeights', 'bodyWeight'],
+    enum: ['cardio', 'bodyWeight', 'weightLifting'],
   },
-  calorieBurn: Number,
-  totalDuration: Number,
+  // If on YouTube
+  url: String,
 });
 
-const Exercise = mongoose.model('exercise', exerciseSchema);
-module.exports = Exercise;
+const exercisePlan = mongoose.model('exercise', exerciseSchema);
+module.exports = exercisePlan;
