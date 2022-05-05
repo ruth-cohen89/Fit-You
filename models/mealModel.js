@@ -9,7 +9,7 @@ const mealSchema = new mongoose.Schema({
   program: {
     type: mongoose.Schema.ObjectId,
     ref: 'programSchema',
-    required: [true, 'Please provide program id'],
+   // required: [true, 'Please provide program id'],
   },
   date: {
     type: Date,
@@ -98,7 +98,6 @@ const calculateMealNutrients = async function (itemObjects) {
 };
 
 const calculateGramsOfItems = async function (itemObjects) {
-  // console.log('hoho', itemObjects[0])
   for (let i = 0; i < this.items.length; i++) {
     // If user didn't specify grams
     if (!this.items[i].servingSize.grams) {
@@ -111,6 +110,8 @@ const calculateGramsOfItems = async function (itemObjects) {
 };
 
 mealSchema.pre('save', async function (next) {
+  //const itemObjects = await Meal.find().populate('items.itemId').sort();
+  //console.log(itemObjects)
   if (!this.totalNutrients.calories) {
     const itemIds = this.items.map((f) => f.itemId);
     let itemObjects = [];
@@ -126,15 +127,17 @@ mealSchema.pre('save', async function (next) {
     await calculateMealNutrients.call(this, itemObjects);
   }
   await isEnoughCalories.call(this);
+
+  next();
+});
+mealSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'items.itemId',
+    select: '-__v',
+  });
+  //console.log(this, 'shit')
   next();
 });
 
-mealSchema.pre('/^find/', async function (next) {
-  this.populate({
-    path: 'items',
-    select: -v -
-  })
-}
-  
 const Meal = mongoose.model('Meal', mealSchema);
 module.exports = Meal;
