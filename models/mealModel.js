@@ -1,30 +1,47 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-plusplus */
 const mongoose = require('mongoose');
-const Food = require('./foodModel');
-const Recipe = require('./recipeModel');
 const Program = require('./programModel');
 
+// we have ref to program in both meals and workouts
+// and not the opposite, since meals and workouts
+// are always updated and program remains the same usually
 const mealSchema = new mongoose.Schema({
   program: {
     type: mongoose.Schema.ObjectId,
     ref: 'programSchema',
-   // required: [true, 'Please provide program id'],
+    required: [true, 'Please provide program id'],
   },
-  date: {
-    type: Date,
-    required: [true, 'when will you eat this meal?'],
+  day: {
+    type: String,
+    required: [true, 'Choose a day.'],
+    enum: [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wedensday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ],
   },
   type: {
     type: String,
     required: [
       true,
-      'Please provide type of meal. (breakfast/lunch/dinner/snack)',
+      'Please provide type of meal. (breakfast/lunch/brunch/dinner/snack)',
     ],
+    enum: ['breakfast', 'lunch', 'brunch', 'dinner', 'snack'],
   },
   totalNutrients: {
-    calories: Number,
-    protein: Number,
+    calories: {
+      type: Number,
+      required: [true, 'Insert amount of calories for the meal.'],
+    },
+    protein: {
+      type: Number,
+      required: [true, 'Insert amount of protein for the meal.'],
+    },
     fat: Number,
     carbs: Number,
   },
@@ -42,16 +59,16 @@ const mealSchema = new mongoose.Schema({
         enum: ['Food', 'Recipe'],
       },
       servingSize: {
-        measure: {
+        type: {
           type: String,
           default: 'gram',
-          required: [true, 'Provide item measure.'],
+          required: [true, 'Provide type of measure.'],
         },
         amount: {
           type: Number,
           required: [true, 'Provide amount of serving.?'],
         },
-        grams: Number,
+        //grams: Number,
       },
     },
   ],
@@ -62,7 +79,7 @@ const isEnoughCalories = async function () {
 
   const dailyMeals = await Meal.find({
     program: this.program,
-    date: this.date,
+    day: this.day,
   });
   if (dailyMeals) {
     const calories = dailyMeals.map((m) => m.totalNutrients.calories);
@@ -74,62 +91,12 @@ const isEnoughCalories = async function () {
   }
 };
 
-const calculateMealNutrients = async function (itemObjects) {
-  let calories = 0;
-  let protein = 0;
-  let carbs = 0;
-  let fat = 0;
-  let fiber = 0;
-
-  for (let i = 0; i < itemObjects.length; i++) {
-    const { grams } = this.items[i].servingSize;
-    calories += itemObjects[i].nutrients.calories * (grams / 100);
-    protein += itemObjects[i].nutrients.protein * (grams / 100);
-    carbs += itemObjects[i].nutrients.carbs * (grams / 100);
-    fat += itemObjects[i].nutrients.fat * (grams / 100);
-    fiber += itemObjects[i].nutrients.fiber * (grams / 100);
-  }
-
-  this.totalNutrients.calories = calories;
-  this.totalNutrients.protein = protein;
-  this.totalNutrients.carbs = carbs;
-  this.totalNutrients.fat = fat;
-  this.totalNutrients.fiber = fiber;
-};
-
-const calculateGramsOfItems = async function (itemObjects) {
-  for (let i = 0; i < this.items.length; i++) {
-    // If user didn't specify grams
-    if (!this.items[i].servingSize.grams) {
-      this.items[i].servingSize.grams =
-        itemObjects[i].measures.find(
-          (o) => o.name === this.items[i].servingSize.measure
-        ).weight * this.items[i].servingSize.amount;
-    }
-  }
-};
-
 mealSchema.pre('save', async function (next) {
-  //const itemObjects = await Meal.find().populate('items.itemId').sort();
-  //console.log(itemObjects)
-  if (!this.totalNutrients.calories) {
-    const itemIds = this.items.map((f) => f.itemId);
-    let itemObjects = [];
-    itemObjects.push(await Food.find({ _id: { $in: itemIds } }));
-    itemObjects.push(await Recipe.find({ _id: { $in: itemIds } }));
-    itemObjects = itemObjects[0];
-
-    itemObjects.sort((a, b) => a._id - b._id);
-    console.log('this', this.items);
-    console.log('items', itemObjects);
-
-    await calculateGramsOfItems.call(this, itemObjects);
-    await calculateMealNutrients.call(this, itemObjects);
-  }
   await isEnoughCalories.call(this);
-
   next();
 });
+
+// does not work
 mealSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'items.itemId',
@@ -138,6 +105,8 @@ mealSchema.pre(/^find/, function (next) {
   //console.log(this, 'shit')
   next();
 });
+//const itemObjects = await Meal.find().populate('items.itemId').sort();
+//console.log(itemObjects)
 
 const Meal = mongoose.model('Meal', mealSchema);
 module.exports = Meal;

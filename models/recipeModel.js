@@ -7,25 +7,11 @@ const recipeSchema = new mongoose.Schema({
     required: [true, 'Please provide name of recipe.'],
     unique: true,
   },
-  //foodId: String,
-  url: String,
-  yield: Number, // servings
-  dietLabels: [{ type: String }],
-  healthLabels: [{ type: String }],
-  ingredients: [{ type: String }],
-
-  proteinCalorieRatio: Number,
-  image: String,
-
-  totalTime: Number,
-  mealType: [{ type: String }],
-  dishType: [{ type: String }],
   totalWeight: {
     type: Number,
-    //required: [true, 'How much does it weight?'],
+    //required: [true, 'How much does it weigh?'],
   },
-
-  totalNutrients: {
+  nutrients: {
     calories: {
       type: Number,
       required: [true, 'How many calories?'],
@@ -66,9 +52,9 @@ const recipeSchema = new mongoose.Schema({
   measures: [
     {
       _id: false,
-      name: {
+      type: {
         type: String,
-        required: [true, 'Please provide measure type (grams/cup/etc).'],
+        required: [true, 'Please provide type of measure(grams/cup/etc).'],
       },
       weight: {
         type: Number,
@@ -77,12 +63,26 @@ const recipeSchema = new mongoose.Schema({
       calories: Number,
     },
   ],
+  proteinCalorieRatio: Number,
+
+  // optional
+  image: String,
+
+  //recipeId: String,
+  url: String,
+  yield: Number, // servings
+  dietLabels: [{ type: String }],
+  healthLabels: [{ type: String }],
+  ingredients: [{ type: String }],
+
+  totalTime: Number,
+  mealType: [{ type: String }],
+  dishType: [{ type: String }],
 });
 
 recipeSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
-  this.proteinCalorieRatio =
-    this.totalNutrients.protein / this.totalNutrients.calories;
+  this.proteinCalorieRatio = this.nutrients.protein / this.nutrients.calories;
   next();
 });
 

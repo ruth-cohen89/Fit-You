@@ -29,7 +29,7 @@ const createNewFood = catchAsync(async (ingr) => {
   const food = data.parsed[0].food;
   const foodMeasures = data.hints[0].measures;
   const filteredMeasures = foodMeasures.map((measure) => ({
-    name: measure.label,
+    type: measure.label,
     weight: measure.weight,
   }));
   const newFood = await Food.create({
@@ -76,7 +76,7 @@ const createNewRecipe = catchAsync(async (item) => {
     mealType: recipe.mealType,
     dishType: recipe.dishType,
 
-    totalNutrients: {
+    nutrients: {
       calories: recipe.totalNutrients.ENERC_KCAL.quantity,
       fat: recipe.totalNutrients.FAT.quantity,
       saturedFat: recipe.totalNutrients.FASAT.quantity,

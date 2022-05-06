@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-//const validator = require('validator');
 const slugify = require('slugify');
 
 const foodSchema = new mongoose.Schema({
@@ -39,17 +38,18 @@ const foodSchema = new mongoose.Schema({
   measures: [
     {
       _id: false,
-      name: {
+      type: {
         type: String,
-        required: [true, 'Please provide measuring type (grams/cup/etc).'],
+        //required: [true, 'Please provide measuring type (grams/cup/etc).'], //cup (quinoa)
       },
       weight: {
         type: Number,
-        required: [true, 'Please provide weight of measure in grams.'],
+        //required: [true, 'Please provide weight of measure in grams.'], //200 (grams)
       },
-      calories: Number,
+      calories: Number, // 200 (calories)
     },
   ],
+  // foodId: String
   proteinCalorieRatio: Number,
   image: String,
 });

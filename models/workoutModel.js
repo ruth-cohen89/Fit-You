@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
 
 const workoutSchema = new mongoose.Schema({
   program: {
@@ -7,11 +6,9 @@ const workoutSchema = new mongoose.Schema({
     ref: 'programSchema',
     required: [true, 'Please enter program id'],
   },
-  link: String,
   name: {
     type: String,
   },
-  // For convinient
   day: {
     type: String,
     required: [true, 'Choose a day.'],
@@ -35,7 +32,7 @@ const workoutSchema = new mongoose.Schema({
       },
       duration: {
         type: Number,
-        required: [true, 'Please enter exercise duraion in minutes'],
+        //required: [true, 'Please enter exercise duraion in minutes'],
       },
       weight: {
         type: Number,
@@ -55,6 +52,14 @@ const workoutSchema = new mongoose.Schema({
   // Add total duration
   totalDuration: Number,
   caloriesBurned: Number,
+});
+
+workoutSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'exercises.id',
+    select: '-__v',
+  });
+  next();
 });
 
 const Workout = mongoose.model('Workout', workoutSchema);

@@ -9,9 +9,17 @@ router
   .delete(authController.protect, mealController.deleteFoodFromMeal);
 
 router
+  .route('/:programId/week')
+  .get(authController.protect, mealController.getWeeklymealPlan);
+
+router
+  .route('/:programId/:day')
+  .get(authController.protect, mealController.getAllMeals);
+
+router
   .route('/')
   .post(authController.protect, mealController.createMeal)
-  .get(mealController.getAllmeals);
+  .get(mealController.getAllMeals);
 
 router
   .route('/:id')

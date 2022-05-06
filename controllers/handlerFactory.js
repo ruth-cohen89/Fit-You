@@ -36,7 +36,12 @@ exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
     let filter = {};
     if (req.params.userId) filter = { user: req.params.userId };
-    console.log(filter)
+
+    // for getting all meals (weekly plan)
+    if (req.params.programId) filter = { program: req.params.programId };
+    // for getting meals (daily plan)
+    if (req.params.day) filter = { day: req.params.day };
+    console.log(filter);
     const features = new APIFeatures(Model.find(filter), req.query)
       .filter()
       .sort()
