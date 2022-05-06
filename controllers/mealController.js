@@ -1,4 +1,6 @@
 const { crossOriginResourcePolicy } = require('helmet');
+
+const ObjectId = require('mongodb').ObjectID;
 const Meal = require('../models/mealModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
@@ -32,8 +34,54 @@ exports.deleteFoodFromMeal = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getDailyPlan = async(req, res, next) => {
+  
+}
+exports.getWeeklymealPlan = async (req, res, next) => {
+  const shit = req.params.programId
+  const meals = await Meal.aggregate([
+    { $match: { program: ObjectId(shit) } },
+    {
+      $addFields: {
+        sortField:
+         { $cond: [
+            { $eq: ['$day', 'Sunday'] }, 0,
+            { $cond: [{ $eq: ['$day', 'Monday'] }, 1,
+            { $cond: [{ $eq: ['$day', 'Tuesday'] }, 2,
+            { $cond: [{ $eq: ['$day', 'Wedensday'] }, 3,
+            { $cond: [{ $eq: ['$day', 'Thursday'] }, 4,
+            { $cond: [{ $eq: ['$day', 'Friday'] }, 5,
+            { $cond: [{ $eq: ['$day', 'Saturday'] }, 6, 7
+                            ]}
+                          ]}
+                      ]}
+                  ]}
+              ]}
+          ]},
+      ]}
+
+    }},
+    { $sort: { sortField: 1 } },
+  ]);
+      // {
+      //   $project: {
+      //     dayOfWeek: { $dayOfWeek: '$day' },
+      //   },
+      // },
+  //{ $sort: {  day: 1 } },
+    //, doc: { $first: '$$ROOT' } } },
+    //{ $replaceRoot: { newRoot: '$doc' } },
+
+  res.status(200).json({
+    status: 'success',
+    results: meals.length,
+    data: {
+      data: meals,
+    },
+  });
+};
 exports.createMeal = factory.createOne(Meal);
-exports.getAllmeals = factory.getAll(Meal);
+exports.getAllMeals = factory.getAll(Meal);
 exports.getMeal = factory.getOne(Meal);
 exports.updateMeal = factory.updateOne(Meal);
 exports.deleteMeal = factory.deleteOne(Meal);
