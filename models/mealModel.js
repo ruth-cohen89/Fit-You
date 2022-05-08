@@ -96,17 +96,23 @@ mealSchema.pre('save', async function (next) {
   next();
 });
 
-// does not work
+mealSchema.pre(/^find/, function (next) {
+  console.log('hyush')
+  this.populate({
+    path: 'items.itemId',
+    model: 'Food',
+    select: '-__v',
+  });
+  next();
+});
 mealSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'items.itemId',
+    model: 'Recipe',
     select: '-__v',
   });
-  //console.log(this, 'shit')
   next();
 });
-//const itemObjects = await Meal.find().populate('items.itemId').sort();
-//console.log(itemObjects)
 
 const Meal = mongoose.model('Meal', mealSchema);
 module.exports = Meal;

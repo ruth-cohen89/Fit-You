@@ -1,5 +1,5 @@
-const { crossOriginResourcePolicy } = require('helmet');
-
+/* eslint-disable prettier/prettier */
+// const { crossOriginResourcePolicy } = require('helmet');
 const ObjectId = require('mongodb').ObjectID;
 const Meal = require('../models/mealModel');
 const AppError = require('../utils/appError');
@@ -45,14 +45,43 @@ exports.getDailyMealPlan = async (req, res, next) => {
       },
     },
     {
+      $project: {
+        day: 1,
+        type: 1,
+        totalNutrients: 1,
+        items: 1,
+      },
+    },
+    {
+      $lookup: {
+        from: 'foods',
+        localField: 'items.itemId',
+        foreignField: '_id',
+        as: 'item',
+      },
+    },
+    {
+      $unwind: '$items',
+    },
+    {
+      $project: {
+        day: 1,
+        type: 1,
+        totalNutrients: 1,
+        'serving size': { '$concat': [ {'$toString': '$items.servingSize.amount'},' ',  '$items.servingSize.type'] },
+        'item.name': 1,
+        'item.nutrients' : 1,
+      },
+    },
+    {
       $addFields: {
         sortField:
         { $cond: [
-            { $eq: ['$day', 'breakfast'] },
+            { $eq: ['$type', 'breakfast'] },
             0,
-        { $cond: [{ $eq: ['$day', 'lunch'] }, 1,
-        { $cond: [{ $eq: ['$day', 'dinner'] }, 2,
-        { $cond: [{ $eq: ['$day', 'snack'] }, 3,
+        { $cond: [{ $eq: ['$type', 'lunch'] }, 1,
+        { $cond: [{ $eq: ['$type', 'dinner'] }, 2,
+        { $cond: [{ $eq: ['$type', 'snack'] }, 3, 4
       ]} ]} ]} ]} 
     }},
     { $sort: { sortField: 1 } },
@@ -66,12 +95,14 @@ exports.getDailyMealPlan = async (req, res, next) => {
   });
 };
 exports.getWeeklyMealPlan = async (req, res, next) => {
+  console.log('hi')
   const shit = req.params.programId;
   const meals = await Meal.aggregate([
     { $match: { program: ObjectId(shit) } },
+
     {
       $addFields: {
-        sortField:
+        sortDay:
          { $cond: [
             { $eq: ['$day', 'Sunday'] }, 0,
             { $cond: [{ $eq: ['$day', 'Monday'] }, 1,
@@ -80,19 +111,18 @@ exports.getWeeklyMealPlan = async (req, res, next) => {
             { $cond: [{ $eq: ['$day', 'Thursday'] }, 4,
             { $cond: [{ $eq: ['$day', 'Friday'] }, 5,
             { $cond: [{ $eq: ['$day', 'Saturday'] }, 6, 7
-            ]} ]} ]} ]} ]} ]}  ]}
-      },
-    },
-    { $sort: { sortField: 1 } },
+            ]} ]} ]} ]} ]} ]}  ]},
+        sortType:
+        { $cond: [
+            { $eq: ['$type', 'breakfast'] },
+            0,
+        { $cond: [{ $eq: ['$type', 'lunch'] }, 1,
+        { $cond: [{ $eq: ['$type', 'dinner'] }, 2,
+        { $cond: [{ $eq: ['$type', 'snack'] }, 3, 4
+      ]} ]} ]} ]} 
+    }},
+    { $sort: { sortDay: 1, sortType: 1 } },
   ]);
-  // {
-  //   $project: {
-  //     dayOfWeek: { $dayOfWeek: '$day' },
-  // },
-  // },
-  //{ $sort: {  day: 1 } },
-  //, doc: { $first: '$$ROOT' } } },
-  //{ $replaceRoot: { newRoot: '$doc' } },
 
   res.status(200).json({
     status: 'success',
