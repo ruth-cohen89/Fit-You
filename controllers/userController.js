@@ -37,7 +37,7 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
 exports.createUser = (req, res) => {
   res.status(500).json({
     status: 'error',
-    message: 'This route is not defined! use signUp instead. 😡',
+    message: 'This route is not defined, use signUp instead ⛔',
   });
 };
 

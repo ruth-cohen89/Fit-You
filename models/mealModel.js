@@ -3,9 +3,6 @@
 const mongoose = require('mongoose');
 const Program = require('./programModel');
 
-// we have ref to program in both meals and workouts
-// and not the opposite, since meals and workouts
-// are always updated and program remains the same usually
 const mealSchema = new mongoose.Schema({
   program: {
     type: mongoose.Schema.ObjectId,
@@ -74,30 +71,73 @@ const mealSchema = new mongoose.Schema({
   ],
 });
 
-const isEnoughCalories = async function () {
-  const dailyCalories = Program.find({ id: this.program }).caloriesPerDay;
+const validateMacros = async function () {
+  let program = await Program.find({ id: this.program });
+  program = program[0];
+  console.log(program.caloriesPerDay, 'cal');
 
   const dailyMeals = await Meal.find({
     program: this.program,
     day: this.day,
   });
+
   if (dailyMeals) {
-    const calories = dailyMeals.map((m) => m.totalNutrients.calories);
-    if (calories + this.totalNutrients.calories > dailyCalories) {
+    const allCalories = dailyMeals.reduce(
+      (acc, m) => acc + m.totalNutrients.calories,
+      0
+    );
+
+    if (allCalories + this.totalNutrients.calories > program.caloriesPerDay) {
+      const gap =
+        allCalories + this.totalNutrients.calories - program.caloriesPerDay;
       console.error(
-        'Too many calories for that day, please change one of the meals'
+        `You have reached your daily amount of calories by ${gap}, Please change one of your meals 🥨`
       );
+    }
+
+    const allProtein = dailyMeals.reduce(
+      (acc, m) => acc + m.totalNutrients.protein,
+      0
+    );
+
+    if (allProtein + this.totalNutrients.protein < program.proteinPerDay) {
+      console.error(
+        'You have not reached your minimum recommended daily amount of protein, Please add more protein to your meals.'
+      );
+    }
+
+    if (program.carbsPerDay) {
+      const allCarbs = dailyMeals.reduce(
+        (acc, m) => acc + m.totalNutrients.carbs,
+        0
+      );
+
+      if (allCarbs + this.totalNutrients.carbs > program.carbsPerDay) {
+        console.error(
+          'Too much carbs for that day, Please change one of your meals'
+        );
+      }
+    }
+    if (program.fatPerDay) {
+      const allFat = dailyMeals.reduce(
+        (acc, m) => acc + m.totalNutrients.fat,
+        0
+      );
+      if (allFat + this.totalNutrients.calories > program.fatPerDay) {
+        console.error(
+          'Too much fat for that day, Please change one of your meals'
+        );
+      }
     }
   }
 };
 
 mealSchema.pre('save', async function (next) {
-  await isEnoughCalories.call(this);
+  await validateMacros.call(this);
   next();
 });
 
 mealSchema.pre(/^find/, function (next) {
-  console.log('hyush')
   this.populate({
     path: 'items.itemId',
     model: 'Food',

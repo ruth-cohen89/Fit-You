@@ -85,9 +85,10 @@ exports.emailConfirm = catchAsync(async (req, res, next) => {
   if (!user) {
     return next(new AppError('Token is invalid or has expired', 400));
   }
+
   user.emailConfirmed = true;
-  user.passwordResetToken = undefined;
-  user.passwordResetExpires = undefined;
+  user.confirmEmailToken = undefined;
+  user.confirmEmailExpires = undefined;
   await user.save({ validateBeforeSave: false });
   createSendToken(user, 200, req, res);
 });

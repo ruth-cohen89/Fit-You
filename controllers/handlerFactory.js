@@ -20,7 +20,6 @@ exports.getOne = (Model, popOptions) =>
     query = query.select('-__v');
     if (popOptions) query = query.populate(popOptions);
     const doc = await query;
-
     if (!doc) {
       return next(new AppError('No document found with that ID', 404));
     }

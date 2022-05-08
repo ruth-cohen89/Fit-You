@@ -6,8 +6,23 @@ const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 
+exports.clearMealPlanDay = catchAsync (async (req, res, next) => {
+  const meals = await Meal.find({ program: req.params.programId, day: req.params.day });
+
+  if (meals.length === 0) {
+     return next(new AppError(`There are no meals on ${req.params.day}`, 404));
+  };
+
+  await Meal.deleteMany({ program: req.params.programId, day: req.params.day });
+
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+});
+
 exports.deleteFoodFromMeal = catchAsync(async (req, res, next) => {
-  const meal = await Meal.findOne({ _id: req.params.id });
+  const meal = await Meal.findOne({ _id: req.params.id});
   if (!meal) {
     return next(new AppError('No meal found with that ID', 404));
   }

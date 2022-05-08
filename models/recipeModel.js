@@ -64,13 +64,11 @@ const recipeSchema = new mongoose.Schema({
     },
   ],
   proteinCalorieRatio: Number,
-
-  // optional
   image: String,
 
   //recipeId: String,
   url: String,
-  yield: Number, // servings
+  yield: Number,
   dietLabels: [{ type: String }],
   healthLabels: [{ type: String }],
   ingredients: [{ type: String }],

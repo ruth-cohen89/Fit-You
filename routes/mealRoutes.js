@@ -14,7 +14,8 @@ router
 
 router
   .route('/:programId/:day')
-  .get(authController.protect, mealController.getDailyMealPlan);
+  .get(authController.protect, mealController.getDailyMealPlan)
+  .delete(authController.protect, mealController.clearMealPlanDay);
 
 router
   .route('/')
