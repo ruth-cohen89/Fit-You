@@ -49,7 +49,7 @@ const foodSchema = new mongoose.Schema({
       calories: Number, // 200 (calories)
     },
   ],
-  // foodId: String
+  // foodId: String (of the external API)
   proteinCalorieRatio: Number,
   image: String,
 });

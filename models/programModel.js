@@ -27,12 +27,24 @@ const programSchema = new mongoose.Schema({
   },
   carbsPerDay: Number,
   fatPerDay: Number,
-  fiberPerDay: Number,
   workoutsPerWeek: {
     type: Number,
     required: [true, 'Get your body moving 🔥'],
   },
 });
+
+programSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'user',
+    select: '-__v -passwordChangedAt -passwordResetToken -',
+  });
+  next();
+});
+
+exports.getMyProgram = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+};
 
 const Program = mongoose.model('Program', programSchema);
 module.exports = Program;
