@@ -36,7 +36,7 @@ const programSchema = new mongoose.Schema({
 programSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'user',
-    select: '-__v -passwordChangedAt -passwordResetToken -',
+    select: '-__v -passwordChangedAt',
   });
   next();
 });
