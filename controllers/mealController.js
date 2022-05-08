@@ -34,6 +34,7 @@ exports.deleteFoodFromMeal = catchAsync(async (req, res, next) => {
   });
 });
 
+// recipes need to be fixed in 2 below functions
 exports.getDailyMealPlan = async (req, res, next) => {
   const meals = await Meal.aggregate([
     {
@@ -61,16 +62,34 @@ exports.getDailyMealPlan = async (req, res, next) => {
       },
     },
     {
-      $unwind: '$items',
+      $unwind: '$item',
     },
+    // {
+    //   $lookup: { 
+    //     from: 'recipes',
+    //     localField: 'items.itemId',
+    //     foreignField: '_id',
+    //     as: 'recipes',
+    //   },
+    // },
+    // {
+    //   $unwind: '$recipes',
+    // },{ '$arrayElemAt': ['$items.name', 0]},
     {
       $project: {
+        _id: false,
         day: 1,
-        type: 1,
-        totalNutrients: 1,
-        'serving size': { '$concat': [ {'$toString': '$items.servingSize.amount'},' ',  '$items.servingSize.type'] },
-        'item.name': 1,
-        'item.nutrients' : 1,
+        'meal': '$type',
+        'name': '$item.name',
+        //'servingSize': {'$toString': { '$arrayElemAt': ['$items.servingSize.amount', 0]}},
+        //'serving size':  { '$concatArrays': [ {'$toString': { '$arrayElemAt': ['$items.servingSize.amount', 0]}},' ',  '$items.servingSize.type'] },
+        'serving size': {
+          '$let': {
+            'vars': { 'amount': {'$toString': { '$arrayElemAt': ['$items.servingSize.amount', 0] }}, 'type': { '$arrayElemAt': ['$items.servingSize.type', 0] }},
+            'in': { '$concat': [ '$$amount', ' ', '$$type' ] }
+          }
+        },
+        'nutrients': '$item.nutrients',
       },
     },
     {
@@ -85,6 +104,7 @@ exports.getDailyMealPlan = async (req, res, next) => {
       ]} ]} ]} ]} 
     }},
     { $sort: { sortField: 1 } },
+    // {$group: {_id: { totalNutrients: {$sum: '$totalNutrients'}}}},
   ]);
   res.status(200).json({
     status: 'success',
