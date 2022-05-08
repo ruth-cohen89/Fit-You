@@ -34,7 +34,7 @@ exports.deleteFoodFromMeal = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getDailyPlan = async (req, res, next) => {
+exports.getDailyMealPlan = async (req, res, next) => {
   const meals = await Meal.aggregate([
     {
       $match: {
@@ -47,15 +47,16 @@ exports.getDailyPlan = async (req, res, next) => {
     {
       $addFields: {
         sortField:
-         { $cond: [
-            { $eq: ['$day', 'breakfast'] }, 0,
-            { $cond: [{ $eq: ['$day', 'lunch'] }, 1,
-            { $cond: [{ $eq: ['$day', 'dinner'] }, 2,
-            { $cond: [{ $eq: ['$day', 'snack'] }, 3,
-          ]} ]} ]} ]} 
-        }},
-        { $sort: { sortField: 1 } },
-      ]);
+        { $cond: [
+            { $eq: ['$day', 'breakfast'] },
+            0,
+        { $cond: [{ $eq: ['$day', 'lunch'] }, 1,
+        { $cond: [{ $eq: ['$day', 'dinner'] }, 2,
+        { $cond: [{ $eq: ['$day', 'snack'] }, 3,
+      ]} ]} ]} ]} 
+    }},
+    { $sort: { sortField: 1 } },
+  ]);
   res.status(200).json({
     status: 'success',
     results: meals.length,
@@ -64,8 +65,8 @@ exports.getDailyPlan = async (req, res, next) => {
     },
   });
 };
-exports.getWeeklymealPlan = async (req, res, next) => {
-  const shit = req.params.programId
+exports.getWeeklyMealPlan = async (req, res, next) => {
+  const shit = req.params.programId;
   const meals = await Meal.aggregate([
     { $match: { program: ObjectId(shit) } },
     {
@@ -79,18 +80,19 @@ exports.getWeeklymealPlan = async (req, res, next) => {
             { $cond: [{ $eq: ['$day', 'Thursday'] }, 4,
             { $cond: [{ $eq: ['$day', 'Friday'] }, 5,
             { $cond: [{ $eq: ['$day', 'Saturday'] }, 6, 7
-            ]} ]} ]} ]} ]} ]} ]}
-    }},
+            ]} ]} ]} ]} ]} ]}  ]}
+      },
+    },
     { $sort: { sortField: 1 } },
   ]);
-      // {
-      //   $project: {
-      //     dayOfWeek: { $dayOfWeek: '$day' },
-      //   },
-      // },
+  // {
+  //   $project: {
+  //     dayOfWeek: { $dayOfWeek: '$day' },
+  // },
+  // },
   //{ $sort: {  day: 1 } },
-    //, doc: { $first: '$$ROOT' } } },
-    //{ $replaceRoot: { newRoot: '$doc' } },
+  //, doc: { $first: '$$ROOT' } } },
+  //{ $replaceRoot: { newRoot: '$doc' } },
 
   res.status(200).json({
     status: 'success',
