@@ -10,11 +10,11 @@ router
 
 router
   .route('/:programId/week')
-  .get(authController.protect, mealController.getWeeklymealPlan);
+  .get(authController.protect, mealController.getWeeklyMealPlan);
 
 router
   .route('/:programId/:day')
-  .get(authController.protect, mealController.getAllMeals);
+  .get(authController.protect, mealController.getDailyMealPlan);
 
 router
   .route('/')
