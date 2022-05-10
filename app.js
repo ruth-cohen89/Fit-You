@@ -15,12 +15,12 @@ const compression = require('compression');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const userRouter = require('./routes/userRoutes');
-const mealPlanRouter = require('./routes/dailyMealPlanRoutes');
+const programRouter = require('./routes/programRoutes');
 const mealRouter = require('./routes/mealRoutes');
 const foodRouter = require('./routes/foodRoutes');
+//const myFoodRouter = require('./routes/myFoodRoutes');
 const recipeRouter = require('./routes/recipeRoutes');
-const programRouter = require('./routes/programRoutes');
-const exerciseRouter = require('./routes/exerciseRoutes');
+const shoppingListRouter = require('./routes/shoppingListRoutes');
 const workoutRouter = require('./routes/workoutRoutes');
 
 const app = express();
@@ -76,10 +76,11 @@ app.use((req, res, next) => {
 
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/programs', programRouter);
-app.use('/api/v1/foods', foodRouter);
-app.use('/api/v1/recipes', recipeRouter);
 app.use('/api/v1/meals', mealRouter);
-app.use('/api/v1/exercises', exerciseRouter);
+app.use('/api/v1/foods', foodRouter);
+//app.use('/api/v1/myFoods', myFoodRouter);
+app.use('/api/v1/recipes', recipeRouter);
+app.use('/api/v1/shoppingLists', shoppingListRouter);
 app.use('/api/v1/workouts', workoutRouter);
 
 app.all('*', (req, res, next) => {

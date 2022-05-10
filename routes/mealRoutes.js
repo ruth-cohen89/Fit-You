@@ -1,39 +1,29 @@
 const express = require('express');
 const mealController = require('../controllers/mealController');
 const authController = require('../controllers/authController');
+const programController = require('../controllers/programController');
 
 const router = express.Router({ mergeParams: true });
 
-router
-  .route('/:id/foods/:foodId')
-  .delete(authController.protect, mealController.deleteFoodFromMeal);
+router.use(authController.protect);
 
-router
-  .route('/:programId/week')
-  .get(authController.protect, mealController.getWeeklyMealPlan);
+router.route('/:id/foods/:foodId').delete(mealController.deleteFoodFromMeal);
+router.route('/:programId/week').get(mealController.getWeeklyMealPlan);
 
 router
   .route('/:programId/:day')
-  .get(authController.protect, mealController.getDailyMealPlan)
-  .delete(authController.protect, mealController.clearMealPlanDay);
+  .get(mealController.getDailyMealPlan)
+  .delete(mealController.clearMealPlanDay);
 
 router
   .route('/')
-  .post(authController.protect, mealController.createMeal)
-  .get(mealController.getAllMeals);
+  .post(programController.setProgramIdForUser, mealController.createMeal)
+  .get(authController.restrictTo('admin'), mealController.getAllMeals);
 
 router
   .route('/:id')
   .get(mealController.getMeal)
-  .patch(
-    authController.protect,
-    authController.restrictTo('admin'),
-    mealController.updateMeal
-  )
-  .delete(
-    authController.protect,
-    authController.restrictTo('admin'),
-    mealController.deleteMeal
-  );
+  .patch(mealController.updateMeal)
+  .delete(mealController.deleteMeal);
 
 module.exports = router;

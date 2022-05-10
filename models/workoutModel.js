@@ -21,15 +21,22 @@ const workoutSchema = new mongoose.Schema({
       'Friday',
       'Saturday',
     ],
+    // cant have more than 1 wo a day
+    unique: true,
   },
 
   exercises: [
     {
-      id: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'exercise',
-        required: [true, 'please enter exercise id :)'],
+      name: {
+        type: String,
+        required: [true, 'Please provide name of exercise.'],
       },
+      type: {
+        type: String,
+        //required: [true, 'Please provide type of exercise'],
+        enum: ['cardio', 'bodyWeight', 'weightLifting'],
+      },
+      url: String, // youtube video
       duration: {
         type: Number,
         //required: [true, 'Please enter exercise duraion in minutes'],
@@ -51,15 +58,7 @@ const workoutSchema = new mongoose.Schema({
 
   // Add total duration
   totalDuration: Number,
-  caloriesBurned: Number,
-});
-
-workoutSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'exercises.id',
-    select: '-__v',
-  });
-  next();
+  totalCaloriesBurn: Number,
 });
 
 const Workout = mongoose.model('Workout', workoutSchema);

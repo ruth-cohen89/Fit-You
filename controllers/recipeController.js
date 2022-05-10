@@ -3,7 +3,7 @@ const Recipe = require('../models/recipeModel');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 
-exports.aliasTopRecipes = catchAsync(async (req, res, next) => {
+exports.aliasTopProteinRecipes = catchAsync(async (req, res, next) => {
   req.query.limit = '10';
   req.query.sort = '-proteinCalorieRatio';
   req.query.fields =

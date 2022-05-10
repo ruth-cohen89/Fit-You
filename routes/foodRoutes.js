@@ -5,13 +5,17 @@ const authController = require('../controllers/authController');
 const router = express.Router({ mergeParams: true });
 
 router
-  .route('/top-10-foods')
-  .get(foodController.aliasTopFoods, foodController.getAllFoods);
+  .route('/top-10-high-protein')
+  .get(foodController.aliasTopProteinFoods, foodController.getAllFoods);
 
 router
   .route('/')
   .get(foodController.getAllFoods)
-  .post(authController.protect, foodController.createFood);
+  .post(
+    authController.protect,
+    authController.restrictTo('admin'),
+    foodController.createFood
+  );
 
 router
   .route('/:id')

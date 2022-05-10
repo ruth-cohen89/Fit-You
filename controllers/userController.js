@@ -7,6 +7,11 @@ const factory = require('./handlerFactory');
 
 const multerStorage = multer.memoryStorage();
 
+exports.addUserIdToBody = (req, res, next) => {
+  req.body.user = req.user.id;
+  next();
+};
+
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
     cb(null, true);

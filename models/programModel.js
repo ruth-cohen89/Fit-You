@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Keep the macros here since it is constant, and not changing by day
 const programSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.ObjectId,
@@ -13,10 +12,20 @@ const programSchema = new mongoose.Schema({
     enum: ['losingFat', 'recomposition', 'mass'],
     required: [true, 'Please choose type of program!'],
   },
+  startDate: {
+    type: Date,
+    default: new Date(),
+  },
   completeDate: {
     type: Date,
     required: [true, 'When will you reach your goal?'],
   },
+
+  programChangedAt: Date,
+  currentWeight: Number,
+  goalWeight: Number,
+  bmi: Number,
+
   caloriesPerDay: {
     type: Number,
     required: [true, 'How many calories would you consume every day?🥨'],
@@ -25,6 +34,7 @@ const programSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'How much protein would you consume every day?'],
   },
+
   carbsPerDay: Number,
   fatPerDay: Number,
   workoutsPerWeek: {
@@ -38,6 +48,12 @@ programSchema.pre(/^find/, function (next) {
     path: 'user',
     select: '-__v -passwordChangedAt',
   });
+  next();
+});
+
+programSchema.pre('update', function (next) {
+  const date = new Date();
+  this.programChangedAt = date;
   next();
 });
 

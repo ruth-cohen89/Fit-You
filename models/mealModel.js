@@ -55,15 +55,27 @@ const mealSchema = new mongoose.Schema({
         required: [true, 'Choose between Food and Recipe'],
         enum: ['Food', 'Recipe'],
       },
+      name: {
+        type: String,
+        required: [true, 'what is the food name?']
+      },
+      calories: {
+        type: Number,
+        required: [true, 'Please provide calories for this amount of food'],
+      },
+      protein: {
+        type: Number,
+        required: [true, 'Please provide protein for this amount of food'],
+      },
       servingSize: {
         type: {
           type: String,
           default: 'gram',
-          required: [true, 'Provide type of measure.'],
+          required: [true, 'Please provide type of measure.'],
         },
         amount: {
           type: Number,
-          required: [true, 'Provide amount of serving.?'],
+          required: [true, 'Please provide amount of serving.?'],
         },
         //grams: Number,
       },
@@ -74,7 +86,6 @@ const mealSchema = new mongoose.Schema({
 const validateMacros = async function () {
   let program = await Program.find({ id: this.program });
   program = program[0];
-  console.log(program.caloriesPerDay, 'cal');
 
   const dailyMeals = await Meal.find({
     program: this.program,

@@ -5,8 +5,6 @@ const mealRouter = require('./mealRoutes');
 
 const router = express.Router();
 
-router.use('/:userId/meals', mealRouter); ///?? TODO: move it to program model and change to programId
-
 router.post('/signup', authController.signup);
 router.post('/emailConfirm/:token', authController.emailConfirm);
 

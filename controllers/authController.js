@@ -236,7 +236,9 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   req.user = currentUser;
-  res.locals.user = currentUser;
+  res.locals.user = currentUser; //?
+  // console.log(res.locals.user, 'local')
+  // console.log(req.user.id, 'user')
   next();
 });
 
@@ -272,7 +274,6 @@ exports.restrictTo =
         new AppError('You do not have permission to perform this action', 403)
       );
     }
-
     next();
   };
 

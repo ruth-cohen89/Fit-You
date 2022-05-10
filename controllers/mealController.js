@@ -2,6 +2,7 @@
 // const { crossOriginResourcePolicy } = require('helmet');
 const ObjectId = require('mongodb').ObjectID;
 const Meal = require('../models/mealModel');
+const Program = require('../models/programModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
@@ -49,8 +50,7 @@ exports.deleteFoodFromMeal = catchAsync(async (req, res, next) => {
   });
 });
 
-// recipes need to be fixed in 2 below functions
-exports.getDailyMealPlan = async (req, res, next) => {
+exports.getDailyMealPlan = catchAsync(async (req, res, next) => {
   const meals = await Meal.aggregate([
     {
       $match: {
@@ -58,53 +58,6 @@ exports.getDailyMealPlan = async (req, res, next) => {
           { program: ObjectId(req.params.programId) },
           { day: req.params.day },
         ],
-      },
-    },
-    {
-      $project: {
-        day: 1,
-        type: 1,
-        totalNutrients: 1,
-        items: 1,
-      },
-    },
-    {
-      $lookup: {
-        from: 'foods',
-        localField: 'items.itemId',
-        foreignField: '_id',
-        as: 'item',
-      },
-    },
-    {
-      $unwind: '$item',
-    },
-    // {
-    //   $lookup: { 
-    //     from: 'recipes',
-    //     localField: 'items.itemId',
-    //     foreignField: '_id',
-    //     as: 'recipes',
-    //   },
-    // },
-    // {
-    //   $unwind: '$recipes',
-    // },{ '$arrayElemAt': ['$items.name', 0]},
-    {
-      $project: {
-        _id: false,
-        day: 1,
-        'meal': '$type',
-        'name': '$item.name',
-        //'servingSize': {'$toString': { '$arrayElemAt': ['$items.servingSize.amount', 0]}},
-        //'serving size':  { '$concatArrays': [ {'$toString': { '$arrayElemAt': ['$items.servingSize.amount', 0]}},' ',  '$items.servingSize.type'] },
-        'serving size': {
-          '$let': {
-            'vars': { 'amount': {'$toString': { '$arrayElemAt': ['$items.servingSize.amount', 0] }}, 'type': { '$arrayElemAt': ['$items.servingSize.type', 0] }},
-            'in': { '$concat': [ '$$amount', ' ', '$$type' ] }
-          }
-        },
-        'nutrients': '$item.nutrients',
       },
     },
     {
@@ -118,9 +71,9 @@ exports.getDailyMealPlan = async (req, res, next) => {
         { $cond: [{ $eq: ['$type', 'snack'] }, 3, 4
       ]} ]} ]} ]} 
     }},
-    { $sort: { sortField: 1 } },
-    // {$group: {_id: { totalNutrients: {$sum: '$totalNutrients'}}}},
+    { $sort: { sortField: 1 } }
   ]);
+
   res.status(200).json({
     status: 'success',
     results: meals.length,
@@ -128,9 +81,9 @@ exports.getDailyMealPlan = async (req, res, next) => {
       data: meals,
     },
   });
-};
-exports.getWeeklyMealPlan = async (req, res, next) => {
-  console.log('hi')
+});
+
+exports.getWeeklyMealPlan = catchAsync(async (req, res, next) => {
   const shit = req.params.programId;
   const meals = await Meal.aggregate([
     { $match: { program: ObjectId(shit) } },
@@ -166,7 +119,8 @@ exports.getWeeklyMealPlan = async (req, res, next) => {
       data: meals,
     },
   });
-};
+});
+
 exports.createMeal = factory.createOne(Meal);
 exports.getAllMeals = factory.getAll(Meal);
 exports.getMeal = factory.getOne(Meal);
