@@ -7,7 +7,7 @@ exports.setProgramIdForUser = catchAsync(async (req, res, next) => {
   if (!req.body.program && req.user.role === 'user') {
     const program = await Program.findOne({ user: req.user.id });
     req.body.program = program.id;
-  };
+  }
   next();
 });
 

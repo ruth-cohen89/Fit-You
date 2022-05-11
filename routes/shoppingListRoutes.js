@@ -7,7 +7,6 @@ const router = express.Router({ mergeParams: true });
 
 router.use(authController.protect);
 
-//TODO: לוודא שכל ה CRUD עובד
 router
   .route('/createMyShoppingList')
   .post(
@@ -16,10 +15,10 @@ router
   );
 
 router
-  .route('/GetMyShoppingList')
+  .route('/GetAllMyShoppingLists')
   .get(
-    shoppingListController.getMyShoppingList,
-    shoppingListController.getShoppingList
+    userController.addUserIdToParams,
+    shoppingListController.getAllShoppingLists
   );
 
 router
@@ -28,12 +27,12 @@ router
     authController.restrictTo('admin'),
     shoppingListController.getAllShoppingLists
   )
-  .post(authController.protect, shoppingListController.createShoppingList);
+  .post(shoppingListController.createShoppingList);
 
 router
   .route('/:id')
   .get(shoppingListController.getShoppingList)
-  .patch(authController.protect, shoppingListController.updateShoppingList)
-  .delete(authController.protect, shoppingListController.deleteShoppingList);
+  .patch(shoppingListController.updateShoppingList)
+  .delete(shoppingListController.deleteShoppingList);
 
 module.exports = router;

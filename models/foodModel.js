@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const slugify = require('slugify');
 
 const foodSchema = new mongoose.Schema({
+  // userId:{ TODO: this babe
+
+  // }
   name: {
     type: String,
     required: [true, 'Please provide name of food.'],
@@ -49,7 +52,7 @@ const foodSchema = new mongoose.Schema({
       calories: Number, // 200 (calories)
     },
   ],
-  // foodId: String (of the external API)
+  // foodId: String (of the external API) Dan?
   proteinCalorieRatio: Number,
   image: String,
 });

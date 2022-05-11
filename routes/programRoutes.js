@@ -2,8 +2,11 @@ const express = require('express');
 const programController = require('../controllers/programController');
 const authController = require('../controllers/authController');
 const userController = require('../controllers/userController');
+const mealRouter = require('./mealRoutes');
 
 const router = express.Router({ mergeParams: true });
+
+router.use('/:programId/meals', mealRouter); // TODO: ? or in programRoutes
 
 router.use(authController.protect);
 

@@ -12,6 +12,11 @@ exports.addUserIdToBody = (req, res, next) => {
   next();
 };
 
+exports.addUserIdToParams = (req, res, next) => {
+  req.params.userId = req.user.id;
+  next();
+};
+
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
     cb(null, true);

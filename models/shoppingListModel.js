@@ -4,12 +4,15 @@ const shoppingListSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
-    unique: true,
     required: [true, 'Shopping list must belong to a user'],
+  },
+  name: {
+    type: String,
+    unique: true,
+    required: [true, 'Please give your list a name'],
   },
   products: [
     {
-      //food id?
       name: {
         type: String,
       },
@@ -19,6 +22,10 @@ const shoppingListSchema = new mongoose.Schema({
       },
     },
   ],
+  createdAt: {
+    type: Date,
+    default: new Date(),
+  },
 });
 
 const ShoppingList = mongoose.model('ShoppingList', shoppingListSchema);

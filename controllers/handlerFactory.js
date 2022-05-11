@@ -41,7 +41,6 @@ exports.getAll = (Model) =>
     if (req.params.programId) filter = { program: req.params.programId };
     // for getting meals (daily plan)
     if (req.params.day) filter = { day: req.params.day };
-    console.log(filter);
     const features = new APIFeatures(Model.find(filter), req.query)
       .filter()
       .sort()
