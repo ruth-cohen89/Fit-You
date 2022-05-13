@@ -85,6 +85,7 @@ exports.getDailyMealPlan = catchAsync(async (req, res, next) => {
 
 exports.getWeeklyMealPlan = catchAsync(async (req, res, next) => {
   const shit = req.params.programId;
+
   const meals = await Meal.aggregate([
     { $match: { program: ObjectId(shit) } },
 
