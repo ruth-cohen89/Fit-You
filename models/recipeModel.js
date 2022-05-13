@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const slugify = require('slugify');
 
 const recipeSchema = new mongoose.Schema({
+  // user: { 
+
+  // }
   name: {
     type: String,
     required: [true, 'Please provide name of recipe.'],

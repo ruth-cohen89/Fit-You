@@ -78,7 +78,6 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/programs', programRouter);
 app.use('/api/v1/meals', mealRouter);
 app.use('/api/v1/foods', foodRouter);
-//app.use('/api/v1/myFoods', myFoodRouter);
 app.use('/api/v1/recipes', recipeRouter);
 app.use('/api/v1/shoppingLists', shoppingListRouter);
 app.use('/api/v1/workouts', workoutRouter);

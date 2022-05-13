@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 const slugify = require('slugify');
 
 const foodSchema = new mongoose.Schema({
-  // userId:{ TODO: this babe
-
+  // userId:{ TODO: this
   // }
   name: {
     type: String,
