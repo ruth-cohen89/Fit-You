@@ -1,4 +1,4 @@
-*.env
+# *.env
 node_modules/
 .cache/
 # Logs
@@ -106,6 +106,6 @@ dist
 # TernJS port file
 .tern-port
 
-*.env
+# *.env
 node_modules/
 .cache/
