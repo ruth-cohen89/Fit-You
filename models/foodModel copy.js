@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 
-const foodSchema = new mongoose.Schema({
+const popularFoodSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
@@ -11,8 +11,9 @@ const foodSchema = new mongoose.Schema({
     required: [true, 'Please provide name of food.'],
     unique: true,
   },
-  totalWeight: Number, // in grams
+  defaultServing: Number, //100g
   nutrients: {
+    // per dafault serving
     calories: {
       type: Number,
       required: [true, 'How many calories?'],
@@ -34,12 +35,7 @@ const foodSchema = new mongoose.Schema({
       required: [true, 'How much fiber?'],
     },
   },
-  defaultServing: {
-    name: String,
-    weight: Number,
-    calories: Number,
-  },
-  measures: [
+  servings: [
     {
       _id: false,
       type: {
@@ -50,13 +46,19 @@ const foodSchema = new mongoose.Schema({
       },
     },
   ],
-  proteinCalorieRatio: Number,
   image: String,
+  proteinCalorieRatio: Number,
 });
 
 foodSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
   this.proteinCalorieRatio = this.nutrients.protein / this.nutrients.calories;
+  next();
+});
+
+foodSchema.pre('save', function (next) {
+  this.slug = slugify(this.name, { lower: true });
+  this.defaultServing = 100;
   next();
 });
 
