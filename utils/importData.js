@@ -28,14 +28,14 @@ const createNewFood = catchAsync(async (ingr) => {
   // eslint-disable-next-line prefer-destructuring
   const food = data.parsed[0].food;
   const foodMeasures = data.hints[0].measures;
-  const filteredMeasures = foodMeasures.map((measure) => ({
-    type: measure.label,
-    weight: measure.weight,
+  const filteredServings = foodMeasures.map((serving) => ({
+    type: serving.label,
+    weight: serving.weight,
   }));
+
   const newFood = await Food.create({
     name: food.label,
-    //foodId: food.foodId,
-
+    totalWeight: 100,
     nutrients: {
       calories: food.nutrients.ENERC_KCAL,
       protein: food.nutrients.PROCNT,
@@ -43,20 +43,15 @@ const createNewFood = catchAsync(async (ingr) => {
       carbs: food.nutrients.CHOCDF,
       fiber: food.nutrients.FIBTG,
     },
-
-    defaultServing: {
-      name: 'gram',
-      weight: 100,
-    },
-    measures: filteredMeasures,
+    servings: filteredServings,
     image: food.image,
+    isPopular: true,
   });
-  console.log(newFood, 'New food here');
+  console.log(newFood, 'New food 😋');
 });
 
 const createNewRecipe = catchAsync(async (item) => {
   const query = item.replace(/ /g, '%20');
-  console.log(query);
   const apiUri = `https://api.edamam.com/api/recipes/v2?type=public&q=${query}&app_id=${process.env.EDAMAM_RECIPE_APPID}&app_key=${process.env.EDAMAM_RECIPE_APPKEY}`
   const response = await fetch(apiUri);
   const data = await response.json();
@@ -65,16 +60,12 @@ const createNewRecipe = catchAsync(async (item) => {
 
   const newRecipe = await Recipe.create({
     name: recipe.label,
-    //image: recipe.image,
+    image: recipe.images.SMALL.url, //??
     url: recipe.url,
     yield: recipe.yield,
-    dietLabels: recipe.dietLabels,
-    healthLabels: recipe.healthLabels,
     ingredients: recipe.ingredientLines,
     totalWeight: recipe.totalWeight,
     totalTime: recipe.totalTime,
-    mealType: recipe.mealType,
-    dishType: recipe.dishType,
 
     nutrients: {
       calories: recipe.totalNutrients.ENERC_KCAL.quantity,
@@ -97,6 +88,7 @@ const createNewRecipe = catchAsync(async (item) => {
       name: 'gram',
       weight: 100,
     },
+    isPopular: true,
   });
   console.log(newRecipe, 'New recipe here');
 });
@@ -154,7 +146,7 @@ if (process.argv[2] === '--importFood') {
     'Chocolate',
     'egg',
     'peanut butter',
-    'omlet',
+    'oil',
     'chicken',
     'milk',
     'cucumber',
@@ -169,7 +161,7 @@ if (process.argv[2] === '--importFood') {
     'apple',
     'bread',
     'ice cream',
-    'cheese',
+    'carrot',
     'candy',
     'cookie',
   ];

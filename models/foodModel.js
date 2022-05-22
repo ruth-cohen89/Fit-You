@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const slugify = require('slugify');
 
 const foodSchema = new mongoose.Schema({
+  // If food was created by a user
   userId: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
@@ -11,7 +12,11 @@ const foodSchema = new mongoose.Schema({
     required: [true, 'Please provide name of food.'],
     unique: true,
   },
-  totalWeight: Number, // in grams
+  totalWeight: {
+    // in grams
+    type: Number,
+    required: [true, 'How much does it weigh?'],
+  },
   nutrients: {
     calories: {
       type: Number,
@@ -29,11 +34,19 @@ const foodSchema = new mongoose.Schema({
       type: Number,
       required: [true, 'How many carbs?'],
     },
-    fiber: {
-      type: Number,
-      required: [true, 'How much fiber?'],
-    },
+    saturedFat: Number,
+    transFat: Number,
+    fiber: Number,
+    sugars: Number,
+    cholesterol: Number,
+    sodium: Number,
+    calcium: Number,
+    magnesium: Number,
+    potassium: Number,
+    iron: Number,
+    zinc: Number,
   },
+
   defaultServing: {
     name: String,
     weight: Number,
@@ -52,6 +65,12 @@ const foodSchema = new mongoose.Schema({
   ],
   proteinCalorieRatio: Number,
   image: String,
+
+  // If food belongs to the popular food repository
+  isPopular: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 foodSchema.pre('save', function (next) {

@@ -45,11 +45,6 @@ const mealSchema = new mongoose.Schema({
   items: [
     {
       _id: false,
-      itemId: {
-        type: mongoose.Schema.Types.ObjectId,
-        refPath: 'itemType',
-        required: true,
-      },
       itemType: {
         type: String,
         required: [true, 'Choose between Food and Recipe'],
@@ -57,7 +52,7 @@ const mealSchema = new mongoose.Schema({
       },
       name: {
         type: String,
-        required: [true, 'what is the food name?']
+        required: [true, 'what is the food name?'],
       },
       calories: {
         type: Number,
@@ -67,18 +62,23 @@ const mealSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'Please provide protein for this amount of food'],
       },
+      carbs: Number,
+      fat: Number,
       servingSize: {
         type: {
           type: String,
-          default: 'gram',
           required: [true, 'Please provide type of measure.'],
         },
         amount: {
           type: Number,
           required: [true, 'Please provide amount of serving.?'],
         },
-        //grams: Number,
       },
+      image: String,
+      proteinCalorieRatio: Number,
+      url: String,
+      yield: Number,
+      ingredients: [String],
     },
   ],
 });
@@ -117,7 +117,7 @@ const validateMacros = async function () {
       );
     }
 
-    if (program.carbsPerDay) {
+    if (program.carbsPerDay && this.totalNutrients.carbs) {
       const allCarbs = dailyMeals.reduce(
         (acc, m) => acc + m.totalNutrients.carbs,
         0
@@ -129,12 +129,12 @@ const validateMacros = async function () {
         );
       }
     }
-    if (program.fatPerDay) {
+    if (program.fatPerDay && this.totalNutrients.fat) {
       const allFat = dailyMeals.reduce(
         (acc, m) => acc + m.totalNutrients.fat,
         0
       );
-      if (allFat + this.totalNutrients.calories > program.fatPerDay) {
+      if (allFat + this.totalNutrients.fat > program.fatPerDay) {
         console.error(
           'Too much fat for that day, Please change one of your meals'
         );
@@ -145,23 +145,6 @@ const validateMacros = async function () {
 
 mealSchema.pre('save', async function (next) {
   await validateMacros.call(this);
-  next();
-});
-
-mealSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'items.itemId',
-    model: 'Food',
-    select: '-__v',
-  });
-  next();
-});
-mealSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'items.itemId',
-    model: 'Recipe',
-    select: '-__v',
-  });
   next();
 });
 

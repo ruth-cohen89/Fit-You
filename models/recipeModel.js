@@ -2,9 +2,11 @@ const mongoose = require('mongoose');
 const slugify = require('slugify');
 
 const recipeSchema = new mongoose.Schema({
-  // user: { 
-
-  // }
+  // If recipe was created by a user
+  userId: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+  },
   name: {
     type: String,
     required: [true, 'Please provide name of recipe.'],
@@ -12,32 +14,29 @@ const recipeSchema = new mongoose.Schema({
   },
   totalWeight: {
     type: Number,
-    //required: [true, 'How much does it weigh?'],
+    required: [true, 'How much does it weigh?'],
   },
   nutrients: {
     calories: {
       type: Number,
       required: [true, 'How many calories?'],
     },
-    fat: {
-      type: Number,
-      required: [true, 'How much fat?'],
-    },
-    saturedFat: Number,
-    transFat: Number,
-    carbs: {
-      type: Number,
-      required: [true, 'How many carbs?'],
-    },
-    fiber: {
-      type: Number,
-      required: [true, 'How much fiber?'],
-    },
-    sugars: Number,
     protein: {
       type: Number,
       required: [true, 'How much protein?'],
     },
+    fat: {
+      type: Number,
+      required: [true, 'How much fat?'],
+    },
+    carbs: {
+      type: Number,
+      required: [true, 'How many carbs?'],
+    },
+    saturedFat: Number,
+    transFat: Number,
+    fiber: Number,
+    sugars: Number,
     cholesterol: Number,
     sodium: Number,
     calcium: Number,
@@ -57,28 +56,23 @@ const recipeSchema = new mongoose.Schema({
       _id: false,
       type: {
         type: String,
-        required: [true, 'Please provide type of measure(grams/cup/etc).'],
       },
       weight: {
         type: Number,
-        required: [true, 'Please provide weight of measure (in grams).'],
       },
-      calories: Number,
     },
   ],
   proteinCalorieRatio: Number,
   image: String,
 
-  //recipeId: String,
+  // If recipe belongs to the popular recipe repository
+  isPopular: {
+    type: Boolean,
+    default: false,
+  },
   url: String,
   yield: Number,
-  dietLabels: [{ type: String }],
-  healthLabels: [{ type: String }],
   ingredients: [{ type: String }],
-
-  totalTime: Number,
-  mealType: [{ type: String }],
-  dishType: [{ type: String }],
 });
 
 recipeSchema.pre('save', function (next) {
