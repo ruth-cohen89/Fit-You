@@ -3,7 +3,7 @@ const foodController = require('../controllers/foodController');
 const authController = require('../controllers/authController');
 
 const router = express.Router({ mergeParams: true });
-
+//
 router
   .route('/top-10-high-protein')
   .get(foodController.aliasTopProteinFoods, foodController.getAllFoods);
