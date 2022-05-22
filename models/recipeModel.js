@@ -3,14 +3,13 @@ const slugify = require('slugify');
 
 const recipeSchema = new mongoose.Schema({
   // If recipe was created by a user
-  userId: {
+  user: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
   name: {
     type: String,
     required: [true, 'Please provide name of recipe.'],
-    unique: true,
   },
   totalWeight: {
     type: Number,
@@ -66,10 +65,10 @@ const recipeSchema = new mongoose.Schema({
   image: String,
 
   // If recipe belongs to the popular recipe repository
-  isPopular: {
-    type: Boolean,
-    default: false,
-  },
+  // isPopular: {
+  //   type: Boolean,
+  //   default: false,
+  // },
   url: String,
   yield: Number,
   ingredients: [{ type: String }],

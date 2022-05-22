@@ -3,14 +3,13 @@ const slugify = require('slugify');
 
 const foodSchema = new mongoose.Schema({
   // If food was created by a user
-  userId: {
+  user: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
   name: {
     type: String,
     required: [true, 'Please provide name of food.'],
-    unique: true,
   },
   totalWeight: {
     // in grams

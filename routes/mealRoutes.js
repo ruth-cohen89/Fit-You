@@ -7,6 +7,10 @@ const router = express.Router({ mergeParams: true });
 
 router.use(authController.protect);
 
+router
+  .route('/:programId/recentlyUsedItems')
+  .get(mealController.getRecentlyUsedItems);
+
 router.route('/:id/foods/:foodId').delete(mealController.deleteFoodFromMeal);
 router.route('/:programId/week').get(mealController.getWeeklyMealPlan);
 

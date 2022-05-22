@@ -17,6 +17,8 @@ router
     foodController.createFood
   );
 
+router.get('/myFoods', authController.protect, foodController.getMyFoods);
+
 router
   .route('/:id')
   .get(foodController.getFood)

@@ -88,7 +88,7 @@ const createNewRecipe = catchAsync(async (item) => {
       name: 'gram',
       weight: 100,
     },
-    isPopular: true,
+    //isPopular: true,
   });
   console.log(newRecipe, 'New recipe here');
 });

@@ -7,6 +7,25 @@ const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 
+
+exports.getRecentlyUsedItems = catchAsync(async (req, res, next) => {
+  const userMeals = await Meal.find({ program: req.params.programId });
+  if (!userMeals) {
+    return next(new AppError('No meals were assigned to this program.', 400));
+  }
+
+  let usedItems = userMeals.map((m) => m.items);
+  usedItems = usedItems.flat();
+
+  res.status(200).json({
+    status: 'success',
+    results: usedItems.length,
+    data: {
+      data: usedItems,
+    },
+  });
+});
+
 exports.clearMealPlanDay = catchAsync (async (req, res, next) => {
   const meals = await Meal.find({ program: req.params.programId, day: req.params.day });
 

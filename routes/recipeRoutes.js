@@ -8,6 +8,8 @@ router
   .route('/top-10-high-protein')
   .get(recipeController.aliasTopProteinRecipes, recipeController.getAllRecipes);
 
+router.get('/myRecipes', authController.protect, recipeController.getMyRecipes);
+
 router
   .route('/')
   .get(recipeController.getAllRecipes)

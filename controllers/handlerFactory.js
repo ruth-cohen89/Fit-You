@@ -39,8 +39,13 @@ exports.getAll = (Model) =>
 
     // for getting all meals (weekly plan)
     if (req.params.programId) filter = { program: req.params.programId };
+
     // for getting meals (daily plan)
     if (req.params.day) filter = { day: req.params.day };
+
+    // for getting popular foods
+    if (req.originalUrl.split('/')[4] === 'popular-foods')
+      filter = { isPopular: true };
     const features = new APIFeatures(Model.find(filter), req.query)
       .filter()
       .sort()
