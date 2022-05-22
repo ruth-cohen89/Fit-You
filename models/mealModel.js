@@ -91,7 +91,7 @@ const validateMacros = async function () {
     program: this.program,
     day: this.day,
   });
-
+//
   if (dailyMeals) {
     const allCalories = dailyMeals.reduce(
       (acc, m) => acc + m.totalNutrients.calories,
