@@ -3,8 +3,8 @@
   <img width="192" src="https://user-images.githubusercontent.com/57313608/170000714-80d30409-4c36-42df-b9f5-0ada29917e53.jpg" />
 </p>
 <h1 align="center">Fit-You</h1>
-<p align="center"><b>Nutrition and Fitness API built with NodeJS, MongoDB, AWS</b> 
-  Makes health and wellness accessible to everyone </p>
+<p align="center"><b>Nutrition and Fitness API built with NodeJS, MongoDB, AWS</b></p>
+<p align="center"><b>Makes health and wellness accessible to everyone</b></p>
 <p align="center">
   • <a href="#deployed-version">Deployed Version</a>
   • <a href="#key-features">Key Features</a>
