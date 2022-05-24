@@ -14,7 +14,7 @@
 
 
 <h2>Deployed Version</h2>
-Live demo (Feel free to visit) 👉 : http://157.175.44.133:8000/api/v1/foods
+Feel free to visit 👉 : http://157.175.44.133:8000/api/v1/foods
 
 # Fit-You
 
