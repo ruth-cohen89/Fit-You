@@ -11,7 +11,11 @@ router
 router
   .route('/')
   .get(foodController.getAllFoods)
-  .post(authController.protect, foodController.createFood);
+  .post(
+    authController.protect,
+    foodController.setFoodPic,
+    foodController.createFood
+  );
 
 router.get('/myFoods', authController.protect, foodController.getMyFoods);
 
