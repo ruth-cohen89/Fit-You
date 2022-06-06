@@ -1,7 +1,7 @@
 const aws = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
-const sharp = require('sharp');
+// const sharp = require('sharp');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -38,8 +38,6 @@ exports.setProfilePic = (req, res, next) => {
   });
 };
 
-// res.status(200).json({ data: req.file.location });
-// console.log(req.file);
 exports.addUserIdToBody = (req, res, next) => {
   req.body.user = req.user.id;
   next();

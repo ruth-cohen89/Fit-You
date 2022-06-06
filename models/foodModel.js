@@ -12,7 +12,7 @@ const foodSchema = new mongoose.Schema({
     required: [true, 'Please provide name of food.'],
   },
   totalWeight: {
-    // in grams
+    // grams
     type: Number,
     required: [true, 'How much does it weigh?'],
   },
