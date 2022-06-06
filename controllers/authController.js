@@ -202,7 +202,7 @@ exports.refreshToken = catchAsync(async (req, res, next) => {
 // Authentication
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
-  //console.log(req.file)
+  console.log(req.body);
   // console.log(file.location )
   //console.logg(file.fieldName)
   // postman
