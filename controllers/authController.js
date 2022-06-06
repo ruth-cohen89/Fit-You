@@ -202,6 +202,9 @@ exports.refreshToken = catchAsync(async (req, res, next) => {
 // Authentication
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
+  //console.log(req.file)
+  // console.log(file.location )
+  //console.logg(file.fieldName)
   // postman
   if (
     req.headers.authorization &&
@@ -236,9 +239,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   req.user = currentUser;
-  res.locals.user = currentUser; //?
-  // console.log(res.locals.user, 'local')
-  // console.log(req.user.id, 'user')
+  res.locals.user = currentUser;
   next();
 });
 

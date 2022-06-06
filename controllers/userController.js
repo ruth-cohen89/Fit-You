@@ -1,12 +1,45 @@
+const aws = require('aws-sdk');
 const multer = require('multer');
+const multerS3 = require('multer-s3');
 const sharp = require('sharp');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
 
-const multerStorage = multer.memoryStorage();
+// eslint-disable-next-line no-new
+const s3 = new aws.S3({
+  accessKeyId: process.env.S3_ACCESS_KEY,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+  region: process.env.S3_BUCKET_REGION,
+});
 
+const upload = (bucketName) =>
+  multer({
+    storage: multerS3({
+      s3,
+      bucket: bucketName,
+      metadata: function (req, file, cb) {
+        cb(null, { fieldName: file.fieldname });
+      },
+      key: function (req, file, cb) {
+        cb(null, `userProfiles/image-${Date.now()}.jpeg`);
+      },
+    }),
+  });
+
+exports.setProfilePic = (req, res, next) => {
+  const uploadSingle = upload('fityou-images').single('photo');
+
+  uploadSingle(req, res, async (err) => {
+    if (err)
+      return res.status(400).json({ success: false, message: err.message });
+    next();
+  });
+};
+
+// res.status(200).json({ data: req.file.location });
+// console.log(req.file);
 exports.addUserIdToBody = (req, res, next) => {
   req.body.user = req.user.id;
   next();
@@ -16,33 +49,6 @@ exports.addUserIdToParams = (req, res, next) => {
   req.params.userId = req.user.id;
   next();
 };
-
-const multerFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image')) {
-    cb(null, true);
-  } else {
-    cb(new AppError('Not an image! Please upload only images.', 400), false);
-  }
-};
-const upload = multer({
-  storage: multerStorage,
-  fileFilter: multerFilter,
-});
-
-exports.uploadUserPhoto = upload.single('photo');
-
-exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
-  if (!req.file) return next();
-  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
-
-  await sharp(req.file.buffer)
-    .resize(500, 500)
-    .toFormat('jpeg')
-    .jpeg({ quality: 90 })
-    .toFile(`public/img/users/${req.file.filename}`);
-
-  next();
-});
 
 exports.createUser = (req, res) => {
   res.status(500).json({
@@ -70,7 +76,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   }
 
   const filteredBody = filterObj(req.body, 'name', 'email');
-  if (req.file) filteredBody.photo = req.file.filename;
+  if (req.file) filteredBody.photo = req.file.location
 
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
@@ -101,6 +107,7 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 
 exports.getAllUsers = factory.getAll(User);
 exports.getUser = factory.getOne(User);
+
 // Do NOT update passwords with updateUser
 exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);

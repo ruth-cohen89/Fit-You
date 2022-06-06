@@ -3,19 +3,15 @@ const foodController = require('../controllers/foodController');
 const authController = require('../controllers/authController');
 
 const router = express.Router({ mergeParams: true });
-//
+
 router
   .route('/top-10-high-protein')
   .get(foodController.aliasTopProteinFoods, foodController.getAllFoods);
 
 router
   .route('/')
-  .get(foodController.getAllFoods)//
-  .post(
-    authController.protect,
-    authController.restrictTo('admin'),
-    foodController.createFood
-  );
+  .get(foodController.getAllFoods)
+  .post(authController.protect, foodController.createFood);
 
 router.get('/myFoods', authController.protect, foodController.getMyFoods);
 
@@ -24,12 +20,12 @@ router
   .get(foodController.getFood)
   .patch(
     authController.protect,
-    authController.restrictTo('admin'),
+    foodController.isFoodCreator,
     foodController.updateFood
   )
   .delete(
     authController.protect,
-    authController.restrictTo('admin'),
+    foodController.isFoodCreator,
     foodController.deleteFood
   );
 

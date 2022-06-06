@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const slugify = require('slugify');
 
 const recipeSchema = new mongoose.Schema({
-  // If recipe was created by a user
+  // recipe creator
   user: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',

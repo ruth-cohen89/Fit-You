@@ -27,6 +27,20 @@ exports.getMyFoods = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.isFoodCreator = catchAsync(async (req, res, next) => {
+  const food = await Food.findById(req.params.id);
+
+  if (String(food.user) !== String(req.user._id) && req.user.role !== 'admin') {
+    return next(
+      new AppError(
+        'Food was not created by this user! User cant make any changes.',
+        400
+      )
+    );
+  }
+  next();
+});
+
 exports.createFood = factory.createOne(Food);
 exports.getAllFoods = factory.getAll(Food);
 exports.getFood = factory.getOne(Food);

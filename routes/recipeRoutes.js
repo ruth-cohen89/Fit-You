@@ -13,23 +13,19 @@ router.get('/myRecipes', authController.protect, recipeController.getMyRecipes);
 router
   .route('/')
   .get(recipeController.getAllRecipes)
-  .post(
-    authController.protect,
-    authController.restrictTo('admin'),
-    recipeController.createRecipe
-  );
+  .post(authController.protect, recipeController.createRecipe);
 
 router
   .route('/:id')
   .get(recipeController.getRecipe)
   .patch(
     authController.protect,
-    authController.restrictTo('admin'),
+    recipeController.isRecipeCreator,
     recipeController.updateRecipe
   )
   .delete(
     authController.protect,
-    authController.restrictTo('admin'),
+    recipeController.isRecipeCreator,
     recipeController.deleteRecipe
   );
 

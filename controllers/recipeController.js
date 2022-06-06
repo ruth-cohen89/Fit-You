@@ -26,6 +26,24 @@ exports.getMyRecipes = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.isRecipeCreator = catchAsync(async (req, res, next) => {
+  const recipe = await Recipe.findById(req.params.id);
+
+  if (
+    String(recipe.user) !== String(req.user._id) &&
+    req.user.role !== 'admin'
+  ) {
+    return next(
+      new AppError(
+        'Recipe was not created by this user! User cant make any changes.',
+        400
+      )
+    );
+  }
+  next();
+});
+
 exports.createRecipe = factory.createOne(Recipe);
 exports.getAllRecipes = factory.getAll(Recipe);
 exports.getRecipe = factory.getOne(Recipe);
