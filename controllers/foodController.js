@@ -7,7 +7,7 @@ const factory = require('./handlerFactory');
 const AppError = require('../utils/appError');
 
 // eslint-disable-next-line no-new
-const s3 = new aws.S3({
+const s3 = new aws.S3({ 
   accessKeyId: process.env.S3_ACCESS_KEY,
   secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
   region: process.env.S3_BUCKET_REGION,
