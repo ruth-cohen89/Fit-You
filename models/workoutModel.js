@@ -21,7 +21,7 @@ const workoutSchema = new mongoose.Schema({
       'Friday',
       'Saturday',
     ],
-    // cant have more than 1 wo a day
+    // Not allowed to have more than 1 wo a day
     unique: true,
   },
 

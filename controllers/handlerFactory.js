@@ -10,7 +10,7 @@ exports.createOne = (Model) =>
       status: 'success',
       data: {
         data: doc,
-      },
+      }, 
     });
   });
 

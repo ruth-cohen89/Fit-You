@@ -10,7 +10,7 @@ router
 
 router
   .route('/')
-  .get(foodController.getAllFoods)
+  .get(foodController.getAllFoods) 
   .post(
     authController.protect,
     foodController.setFoodPic,

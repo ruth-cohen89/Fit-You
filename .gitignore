@@ -4,3 +4,4 @@ node_modules/
 *.pem
 .pem
 test.js
+cp.js
