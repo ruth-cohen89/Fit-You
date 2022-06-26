@@ -31,7 +31,9 @@ Built using: node.js, express, mongoDB and mongoose
 
 * MongoDB Atlas - Cloud database service
 
-* AWS Ec2 - Cloud Platform
+* AWS Ec2 - Cloud Infrastructure
+
+* AWS S3 - Storage Service
 
 * JSON Web Token - Security token
 
