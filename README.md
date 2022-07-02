@@ -1,10 +1,10 @@
 <p align="center">
   
-  <img width="192" src="https://user-images.githubusercontent.com/57313608/170000714-80d30409-4c36-42df-b9f5-0ada29917e53.jpg" />
+  <img width="192" src="file:///C:/Users/Ruth.LAPTOP-6SFCFEG0/Desktop/WhatsApp%20Image%202022-06-27%20at%2000.07.48.jpeg" />
 </p>
 <h1 align="center">Fit-You</h1>
 <p align="center"><b>Nutrition and Fitness API built with NodeJS, MongoDB, AWS</b></p>
-<p align="center"><b>Makes health and wellness accessible to everyone</b></p>
+<p align="center"><b>Making health and wellness accessible to everyone</b></p>
 <p align="center">
   • <a href="#deployed-version">Deployed Version</a>
   • <a href="#key-features">Key Features</a>
@@ -31,7 +31,9 @@ Built using: node.js, express, mongoDB and mongoose
 
 * MongoDB Atlas - Cloud database service
 
-* AWS Ec2 - Cloud Platform
+* AWS Ec2 - Cloud Infrastructure
+
+* AWS S3 - Storage Service
 
 * JSON Web Token - Security token
 
