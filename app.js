@@ -18,7 +18,6 @@ const userRouter = require('./routes/userRoutes');
 const programRouter = require('./routes/programRoutes');
 const mealRouter = require('./routes/mealRoutes');
 const foodRouter = require('./routes/foodRoutes');
-//const myFoodRouter = require('./routes/myFoodRoutes');
 const recipeRouter = require('./routes/recipeRoutes');
 const shoppingListRouter = require('./routes/shoppingListRoutes');
 const workoutRouter = require('./routes/workoutRoutes');
@@ -74,6 +73,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use('/api', userRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/programs', programRouter);
 app.use('/api/v1/meals', mealRouter);
