@@ -21,6 +21,7 @@ const foodRouter = require('./routes/foodRoutes');
 const recipeRouter = require('./routes/recipeRoutes');
 const shoppingListRouter = require('./routes/shoppingListRoutes');
 const workoutRouter = require('./routes/workoutRoutes');
+// const home = require('.public/home.html');
 
 const app = express();
 
@@ -47,7 +48,6 @@ const limiter = rateLimit({
 });
 
 app.use('/api', limiter);
-
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
@@ -73,7 +73,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api', userRouter);
+// eslint-disable-next-line prefer-arrow-callback
+app.get('/api', function (res) {
+  res.sendFile(path.join(__dirname, '/public/welcome.html'));
+});
+
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/programs', programRouter);
 app.use('/api/v1/meals', mealRouter);
