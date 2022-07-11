@@ -74,7 +74,7 @@ app.use((req, res, next) => {
 });
 
 // eslint-disable-next-line prefer-arrow-callback
-app.get('/api', function (req, res) {
+app.get('/api/v1', function (req, res) {
   res.sendFile(path.join(__dirname, '/public/welcome.html'));
 });
 
