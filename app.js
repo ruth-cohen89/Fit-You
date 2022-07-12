@@ -21,33 +21,34 @@ const foodRouter = require('./routes/foodRoutes');
 const recipeRouter = require('./routes/recipeRoutes');
 const shoppingListRouter = require('./routes/shoppingListRoutes');
 const workoutRouter = require('./routes/workoutRoutes');
-// const home = require('.public/home.html');
 
 const app = express();
 
 app.enable('trust proxy');
 
-// app.set('view engine', 'pug');
-// app.set('views', path.join(__dirname, 'views'));
-
 // Access-Control-Allow-Origin *
-app.use(cors());
-app.options('*', cors());
+// app.use(cors());
+// app.options('*', cors());
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/api', function (req, res) {
+  res.sendFile(path.join(__dirname, '/public/welcome.html'));
+});
+
 app.use(helmet());
+
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from this IP, please try again in an hour!',
+});
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
+  app.use('/api', limiter);
 }
 
-// const limiter = rateLimit({
-//   max: 100,
-//   windowMs: 60 * 60 * 1000,
-//   message: 'Too many requests from this IP, please try again in an hour!',
-// });
-
-//app.use('/api', limiter);
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
@@ -74,11 +75,10 @@ app.use((req, res, next) => {
 });
 
 // eslint-disable-next-line prefer-arrow-callback
-// app.get('/api/po', function (req, res) {
-//   res.sendFile(path.join(__dirname, '/public/welcome.html'));
-// });
+app.get('/api', function (req, res) {
+  res.sendFile(path.join(__dirname, '/public/welcome.html'));
+});
 
-app.use('/api/po', userRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/programs', programRouter);
 app.use('/api/v1/meals', mealRouter);

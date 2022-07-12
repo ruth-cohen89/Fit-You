@@ -5,17 +5,9 @@ const authController = require('../controllers/authController');
 const router = express.Router();
 
 // router.use('/:userId/meals', mealRouter);
-// router.use('/:userId/meals', mealRouter);
 
 router.post('/signup', authController.signup);
 router.post('/emailConfirm/:token', authController.emailConfirm);
-router.get('/po', (req, res) => {
-  res.status(204).json({
-  
-    status: 'success',
-    data: null,
-  });
-});
 
 router.get('/sendSmsnCode', authController.sendSmsVerificationCode);
 router.get('/verifySmsCode', authController.verifySmsCode);
