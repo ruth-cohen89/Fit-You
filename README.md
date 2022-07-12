@@ -45,5 +45,5 @@ Built using: node.js, express, mongoDB and mongoose
 
 * Twilio - Sms API 
 
-<b>License</b>
+<h6>License</h6>
 <div>© Ruth Cohen</div>
