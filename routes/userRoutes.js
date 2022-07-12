@@ -9,6 +9,12 @@ const router = express.Router();
 
 router.post('/signup', authController.signup);
 router.post('/emailConfirm/:token', authController.emailConfirm);
+router.get('/api/po', (req, res) => {
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+});
 
 router.get('/sendSmsnCode', authController.sendSmsVerificationCode);
 router.get('/verifySmsCode', authController.verifySmsCode);
