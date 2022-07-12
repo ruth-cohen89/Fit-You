@@ -88,8 +88,12 @@ app.use('/api/v1/shoppingLists', shoppingListRouter);
 app.use('/api/v1/workouts', workoutRouter);
 
 app.all('*', (req, res, next) => {
-  next(new AppError(`Can't find ${req.originalUrl} on this server 🙄`, 404));
+  next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 });
 
 app.use(globalErrorHandler);
 module.exports = app;
+
+// sudo vim /etc/systemd/system/fitYou.service
+// sudo systemctl enable fityou.service
+// sudo systemctl start fityou.service
