@@ -32,6 +32,7 @@ app.enable('trust proxy');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// eslint-disable-next-line prefer-arrow-callback
 app.get('/api', function (req, res) {
   res.sendFile(path.join(__dirname, '/public/welcome.html'));
 });
@@ -75,9 +76,9 @@ app.use((req, res, next) => {
 });
 
 // eslint-disable-next-line prefer-arrow-callback
-app.get('/api', function (req, res) {
-  res.sendFile(path.join(__dirname, '/public/welcome.html'));
-});
+// app.get('/api', function (req, res) {
+//   res.sendFile(path.join(__dirname, '/public/welcome.html'));
+// });
 
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/programs', programRouter);
