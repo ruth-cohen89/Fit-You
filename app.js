@@ -31,17 +31,21 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
 // Access-Control-Allow-Origin *
-//app.use(cors());
+app.use(cors());
 // app.options('*', cors());
-    // allow cors requests from any origin and with credentials
-    app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
-    
-   //change added that caused issues with the playing mechanism. Needed these headers for another 
-    app.use(function(req, res, next) {
-      res.header("Cross-Origin-Embedder-Policy", "require-corp");
-      res.header("Cross-Origin-Opener-Policy", "same-origin");
-      next();
-    });
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.setHeader('Cross-origin-Embedder-Policy', 'require-corp');
+  res.setHeader('Cross-origin-Opener-Policy','same-origin');
+
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200)
+  } else {
+    next()
+  }
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(helmet());
