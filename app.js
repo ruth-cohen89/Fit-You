@@ -27,8 +27,8 @@ const app = express();
 
 app.enable('trust proxy');
 
-app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'pug');
+// app.set('views', path.join(__dirname, 'views'));
 
 // Access-Control-Allow-Origin *
 app.use(cors());
@@ -74,7 +74,7 @@ app.use((req, res, next) => {
 });
 
 // eslint-disable-next-line prefer-arrow-callback
-app.get('/api/v1', function (req, res) {
+app.get('/api', function (req, res) {
   res.sendFile(path.join(__dirname, '/public/welcome.html'));
 });
 
