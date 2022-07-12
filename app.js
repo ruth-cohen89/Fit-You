@@ -77,7 +77,7 @@ app.use((req, res, next) => {
 app.get('/api/po', function (req, res) {
   res.sendFile(path.join(__dirname, '/public/welcome.html'));
 });
-
+app.use('/api/po', userRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/programs', programRouter);
 app.use('/api/v1/meals', mealRouter);
