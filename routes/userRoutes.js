@@ -11,6 +11,7 @@ router.post('/signup', authController.signup);
 router.post('/emailConfirm/:token', authController.emailConfirm);
 router.get('/po', (req, res) => {
   res.status(204).json({
+  
     status: 'success',
     data: null,
   });
