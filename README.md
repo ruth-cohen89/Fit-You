@@ -44,3 +44,5 @@ Built using: node.js, express, mongoDB and mongoose
 * EDAMAM - Food and Recipe APIs
 
 * Twilio - Sms API 
+<b>License</b>
+© Ruth Cohen
