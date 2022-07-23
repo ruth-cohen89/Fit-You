@@ -1,7 +1,8 @@
 <p align="center">
   
-  <img width="192" src="file:///C:/Users/Ruth.LAPTOP-6SFCFEG0/Desktop/WhatsApp%20Image%202022-06-27%20at%2000.07.48.jpeg" />
+  <img width="192" src="https://fityou-images.s3.me-south-1.amazonaws.com/frontEnd/logo.jpeg" />
 </p>
+
 <h1 align="center">Fit-You</h1>
 <p align="center"><b>Nutrition and Fitness API built with NodeJS, MongoDB, and AWS</b></p>
 <p align="center"><b>Making health and wellness accessible to everyone</b></p>
