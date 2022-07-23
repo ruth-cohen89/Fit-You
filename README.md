@@ -4,8 +4,9 @@
 </p>
 
 <h1 align="center">Fit-You</h1>
-<p align="center"><b>Nutrition and Fitness API built with NodeJS, MongoDB, and AWS</b></p>
-<p align="center"><b>Making health and wellness accessible to everyone</b></p>
+<p align="center"><b>Nutrition and Fitness REST API built with NodeJS, MongoDB, and AWS</b></p>
+<p align="center"><b>Making health and wellness accessible for everyone</b></p>
+<p align="center"><b>Sign in, prepare your own plan and get your dream body!</b></p>
 <p align="center">
   • <a href="#deployed-version">Deployed Version</a>
   • <a href="#key-features">Key Features</a>
@@ -18,19 +19,15 @@
 <h2>Deployed Version</h2>
 Feel free to visit 👉 : http://157.175.44.133:8000/api
 
-# Fit-You
-
-Built using: node.js, express, mongoDB and mongoose
-
 <h2>Built with</h2>
 
 * NodeJS - JS runtime environment
 
 * Express - The web framework used
 
-* Mongoose - Object Data Modelling (ODM) library
-
 * MongoDB Atlas - Cloud database service
+
+* Mongoose - Object Data Modelling (ODM) library
 
 * AWS Ec2 - Cloud Infrastructure
 
