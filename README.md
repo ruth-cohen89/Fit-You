@@ -1,6 +1,6 @@
 <p align="center">
   
-  <img width="192" src="https://fityou-images.s3.me-south-1.amazonaws.com/frontEnd/logo.jpeg" />
+  <img width="250" height="230" src="https://fityou-images.s3.me-south-1.amazonaws.com/frontEnd/logo.jpeg" />
 </p>
 
 <h1 align="center">Fit-You</h1>
