@@ -16,7 +16,7 @@
 </p>
 
 <h2>Description</h2>
-<p>Making health and wellness accessible for everyone</p>
+<p>Making health and wellness accessible for everyone.</p>
 <p>Sign in, prepare your own plan and get your dream body!</p>
 
 <h2>Deployed Version</h2>
