@@ -16,8 +16,8 @@
 </p>
 
 <h2>Description</h2>
-<p><b> Making health and wellness accessible for everyone</b> </p>
-<p><b> Sign in, prepare your own plan and get your dream body!</b> </p>
+<p>Making health and wellness accessible for everyone</p>
+<p>Sign in, prepare your own plan and get your dream body!</p>
 
 <h2>Deployed Version</h2>
 Feel free to visit 👉 : http://157.175.44.133:8000/api
