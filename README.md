@@ -5,7 +5,9 @@
 
 <h1 align="center">Fit-You</h1>
 <p align="center"><b>Nutrition and Fitness REST API built with NodeJS, MongoDB, and AWS</b> </p>
-<p align="center"><b> Making health and wellness accessible for everyone</b> <b>Sign in, prepare your own plan and get your dream body!</b></p>
+<p align="center"><b> Making health and wellness accessible for everyone</b> </p>
+<p align="center"><b> Sign in, prepare your own plan and get your dream body</b> </p>
+  
 <p align="center">
   • <a href="#deployed-version">Deployed Version</a>
   • <a href="#key-features">Key Features</a>
