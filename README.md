@@ -1,11 +1,13 @@
 <p align="center">
   
-  <img width="192" src="file:///C:/Users/Ruth.LAPTOP-6SFCFEG0/Desktop/WhatsApp%20Image%202022-06-27%20at%2000.07.48.jpeg" />
+  <img width="270" height="140" src="https://fityou-images.s3.me-south-1.amazonaws.com/frontEnd/logo.jpeg" />
 </p>
+
 <h1 align="center">Fit-You</h1>
-<p align="center"><b>Nutrition and Fitness API built with NodeJS, MongoDB, AWS</b></p>
-<p align="center"><b>Making health and wellness accessible to everyone</b></p>
+<p align="center"><b>Nutrition and Fitness REST API built with NodeJS, MongoDB, and AWS</b> </p>
+  
 <p align="center">
+  • <a href="#description">Description</a>
   • <a href="#deployed-version">Deployed Version</a>
   • <a href="#key-features">Key Features</a>
   • <a href="#demonstration">Demonstration</a>
@@ -13,13 +15,12 @@
   • <a href="#built-with">Built With</a>
 </p>
 
+<h2>Description</h2>
+<p>Making health and wellness accessible for everyone.</p>
+<p>Sign in, prepare your own plan and get your dream body!</p>
 
 <h2>Deployed Version</h2>
-Feel free to visit 👉 : http://157.175.44.133:8000/api/v1/foods
-
-# Fit-You
-
-Built using: node.js, express, mongoDB and mongoose
+Feel free to visit 👉 : http://157.175.44.133:8000/api
 
 <h2>Built with</h2>
 
@@ -27,9 +28,9 @@ Built using: node.js, express, mongoDB and mongoose
 
 * Express - The web framework used
 
-* Mongoose - Object Data Modelling (ODM) library
-
 * MongoDB Atlas - Cloud database service
+
+* Mongoose - Object Data Modelling (ODM) library
 
 * AWS Ec2 - Cloud Infrastructure
 
@@ -44,3 +45,6 @@ Built using: node.js, express, mongoDB and mongoose
 * EDAMAM - Food and Recipe APIs
 
 * Twilio - Sms API 
+
+<h3>License</h3>
+<div>© Ruth Cohen</div>
