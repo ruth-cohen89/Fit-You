@@ -12,6 +12,7 @@ module.exports = class Email {
   }
 
   newTransport() {
+    // Prod: use sendGrid
     if (process.env.NODE_ENV === 'production') {
       return nodemailer.createTransport(
         nodemailerSendgrid({
@@ -20,6 +21,7 @@ module.exports = class Email {
       );
     }
 
+    // Dev: use mailTrap
     return nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
       port: process.env.EMAIL_PORT,

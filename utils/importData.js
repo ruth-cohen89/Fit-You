@@ -5,6 +5,7 @@ const catchAsync = require('./catchAsync');
 const Food = require('../models/foodModel');
 const Recipe = require('../models/recipeModel');
 
+// Run the script with 1 function name:
 // node ./utils/importData.js --importFood || deleteFood || importRecipe || deleteRecipe
 dotenv.config({ path: './config.env' });
 
@@ -52,7 +53,7 @@ const createNewFood = catchAsync(async (ingr) => {
 
 const createNewRecipe = catchAsync(async (item) => {
   const query = item.replace(/ /g, '%20');
-  const apiUri = `https://api.edamam.com/api/recipes/v2?type=public&q=${query}&app_id=${process.env.EDAMAM_RECIPE_APPID}&app_key=${process.env.EDAMAM_RECIPE_APPKEY}`
+  const apiUri = `https://api.edamam.com/api/recipes/v2?type=public&q=${query}&app_id=${process.env.EDAMAM_RECIPE_APPID}&app_key=${process.env.EDAMAM_RECIPE_APPKEY}`;
   const response = await fetch(apiUri);
   const data = await response.json();
 
@@ -141,6 +142,11 @@ const deleteRecipe = async () => {
   process.exit();
 };
 
+// print process.argv
+process.argv.forEach((val, index) => {
+  console.log(`${index}: ${val}`);
+});
+
 if (process.argv[2] === '--importFood') {
   const basicProducts = [
     'Chocolate',
@@ -165,7 +171,10 @@ if (process.argv[2] === '--importFood') {
     'candy',
     'cookie',
   ];
-  importFood(basicProducts);
+  (async (mybasicProducts) => {
+    await importFood(mybasicProducts);
+    console.log('imported food data');
+  })(basicProducts);
 } else if (process.argv[2] === '--deleteFood') {
   deleteFood();
 } else if (process.argv[2] === '--importRecipe') {

@@ -63,7 +63,8 @@ exports.signup = catchAsync(async (req, res, next) => {
   )}/emailConfirm/${confirmToken}`;
   const emailMessage = `Welcome to Fit-You! Submit a POST request to: ${confirmURL}.`;
 
-  await new Email(newUser, emailMessage).sendWelcome();
+  const mail = await new Email(newUser, emailMessage).sendWelcome();
+  console.log('mail', mail);
   res.status(200).json({
     status: 'success',
     message: 'Confimiration email successfuly sent to your address',

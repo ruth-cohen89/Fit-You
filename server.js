@@ -33,7 +33,7 @@ const server = app.listen(port, () => {
 // Promise rejections (outside of the app)
 process.on('unhandledRejection', (err) => {
   console.log('UNHANDLED REJECTION! 💥 Shutting down...');
-  console.log(err.name, err.message);
+  console.log('New error:', err.name, err.message);
   server.close(() => {
     process.exit(1);
   });
