@@ -58,9 +58,17 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   const confirmToken = newUser.createEmailConfirmToken();
   await newUser.save({ validateBeforeSave: false });
-  const confirmURL = `${req.protocol}://${req.get(
-    'host'
-  )}/emailConfirm/${confirmToken}`;
+
+  let confirmURL;
+  if (process.env.NODE_ENV === 'production') {
+    confirmURL = `${req.protocol}://${req.get(
+      'host'
+    )}/emailConfirm/${confirmToken}`;
+  } else {
+    confirmURL = `${req.protocol}://${req.get(
+      'host'
+    )}/api/v1/users/emailConfirm/${confirmToken}`;
+  }
   const emailMessage = `Welcome to Fit-You! Submit a POST request to: ${confirmURL}.`;
 
   const mail = await new Email(newUser, emailMessage).sendWelcome();
