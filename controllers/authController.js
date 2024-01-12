@@ -71,7 +71,6 @@ exports.signup = catchAsync(async (req, res, next) => {
   const emailMessage = `Welcome to Fit-You! Submit a POST request to: ${confirmURL}.`;
 
   const mail = await new Email(newUser, emailMessage).sendWelcome();
-  console.log('mail', mail);
   res.status(200).json({
     status: 'success',
     message: 'Confimiration email successfuly sent to your address',
@@ -210,9 +209,6 @@ exports.refreshToken = catchAsync(async (req, res, next) => {
 // Authentication
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
-  console.log(req.body);
-  // console.log(file.location )
-  //console.logg(file.fieldName)
   // postman
   if (
     req.headers.authorization &&

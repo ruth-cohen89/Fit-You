@@ -23,11 +23,11 @@ module.exports = class Email {
 
     // Dev: use mailTrap
     return nodemailer.createTransport({
-      host: process.env.DEV_EMAIL_HOST,
-      port: process.env.DEV_EMAIL_PORT,
+      host: process.env.MAILTRAP_EMAIL_HOST,
+      port: process.env.MAILTRAP_EMAIL_PORT,
       auth: {
-        user: process.env.DEV_EMAIL_USERNAME,
-        pass: process.env.DEV_EMAIL_PASSWORD,
+        user: process.env.MAILTRAP_EMAIL_USERNAME,
+        pass: process.env.MAILTRAP_EMAIL_PASSWORD,
       },
     });
   }

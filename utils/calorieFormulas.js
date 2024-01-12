@@ -4,7 +4,7 @@ let gender = 'female';
 // 135 - 2.5
 let height = 149; // cm
 let currentWeight = 50; // kg
-let targetWeight = 47; 
+let targetWeight = 47;
 let timeToLoseWeight = 14; // days
 const weightToLose = targetWeight - currentWeight;
 
@@ -34,7 +34,7 @@ if (gender === 'female') {
 } else if (gender === 'male') {
   BMR = 10 * weight + 6.25 * height - 5 * age + 5;
 } else {
-  throw new Error('Gender is not valid')
+  throw new Error('Gender is not valid');
 }
 
 const TDEE = Math.round(BMR * factor);
@@ -43,7 +43,6 @@ const kgFat = 7700; // cals
 const caloriesOfFatToLose = kgFat * weightToLose;
 const dailyDeficit = caloriesOfFatToLose / timeToLoseWeight;
 const dailyCaloriesToConsume = TDEE - dailyDeficit;
-
 
 if (
   dailyDeficit > 1000 ||
@@ -54,7 +53,6 @@ if (
 }
 
 const message = `You need to consume ${dailyCaloriesToConsume} every day to reach your goal!`;
-console.log(message);
 // If dailyDeficit is bigger than 1000 - losing more than 2lb for a week
 // If dailyDeficit...
 // 7700/14=550
