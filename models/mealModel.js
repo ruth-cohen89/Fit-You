@@ -83,6 +83,9 @@ const mealSchema = new mongoose.Schema({
   ],
 });
 
+// Optimize frequent lookups of meals by program and day.
+mealSchema.index({ program: 1, day: 1 });
+
 const validateMacros = async function () {
   let program = await Program.find({ id: this.program });
   program = program[0];
