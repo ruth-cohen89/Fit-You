@@ -21,8 +21,6 @@ const workoutSchema = new mongoose.Schema({
       'Friday',
       'Saturday',
     ],
-    // Not allowed to have more than 1 wo a day
-    unique: true,
   },
 
   exercises: [
@@ -60,6 +58,9 @@ const workoutSchema = new mongoose.Schema({
   totalDuration: Number,
   totalCaloriesBurn: Number,
 });
+
+// Allow one workout per day for each program, while keeping lookups efficient.
+workoutSchema.index({ program: 1, day: 1 }, { unique: true });
 
 const Workout = mongoose.model('Workout', workoutSchema);
 module.exports = Workout;
