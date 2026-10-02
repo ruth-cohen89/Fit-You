@@ -72,6 +72,9 @@ const foodSchema = new mongoose.Schema({
   },
 });
 
+// Optimize popular-food queries that filter by popularity and rank by protein/calorie ratio.
+foodSchema.index({ isPopular: 1, proteinCalorieRatio: -1 });
+
 foodSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
   this.proteinCalorieRatio = this.nutrients.protein / this.nutrients.calories;
