@@ -1,6 +1,7 @@
 const aws = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
+const fetch = require('node-fetch');
 const Food = require('../models/foodModel');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
@@ -44,6 +45,96 @@ exports.aliasTopProteinFoods = catchAsync(async (req, res, next) => {
   req.query.fields =
     'name,proteinCalorieRatio,nutrients.protein,nutrients.calories';
   next();
+});
+
+// DB-first lookup: reuse a shared food already stored locally. If it does not
+// exist, fetch it once from EDAMAM, persist it, and reuse it on later searches.
+exports.lookupFood = catchAsync(async (req, res, next) => {
+  const query = String(req.query.q || '').trim();
+
+  if (!query) {
+    return next(new AppError('Please provide a food query using ?q=', 400));
+  }
+
+  const normalizedName = query.toLowerCase();
+
+  let food = await Food.findOne({
+    normalizedName,
+    user: { $exists: false },
+  });
+
+  // Backwards compatibility for foods imported before normalizedName existed.
+  if (!food) {
+    const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    food = await Food.findOne({
+      name: { $regex: `^${escapedQuery}$`, $options: 'i' },
+      user: { $exists: false },
+    });
+
+    if (food && !food.normalizedName) {
+      food.normalizedName = normalizedName;
+      await food.save();
+    }
+  }
+
+  if (food) {
+    return res.status(200).json({
+      status: 'success',
+      source: 'database',
+      data: { data: food },
+    });
+  }
+
+  const params = new URLSearchParams({
+    app_id: process.env.EDAMAM_FOOD_APPID,
+    app_key: process.env.EDAMAM_FOOD_APPKEY,
+    ingr: query,
+    'nutrition-type': 'cooking',
+    category: 'generic-foods',
+  });
+
+  const response = await fetch(
+    `https://api.edamam.com/api/food-database/v2/parser?${params.toString()}`
+  );
+
+  if (!response.ok) {
+    return next(new AppError('Could not fetch food data from EDAMAM.', 502));
+  }
+
+  const data = await response.json();
+
+  if (!data.parsed || data.parsed.length === 0) {
+    return next(new AppError('Food was not found.', 404));
+  }
+
+  const edamamFood = data.parsed[0].food;
+  const foodMeasures = data.hints?.[0]?.measures || [];
+  const measures = foodMeasures.map((serving) => ({
+    type: serving.label,
+    weight: serving.weight,
+  }));
+
+  food = await Food.create({
+    name: edamamFood.label,
+    normalizedName,
+    totalWeight: 100,
+    nutrients: {
+      calories: edamamFood.nutrients.ENERC_KCAL,
+      protein: edamamFood.nutrients.PROCNT,
+      fat: edamamFood.nutrients.FAT,
+      carbs: edamamFood.nutrients.CHOCDF,
+      fiber: edamamFood.nutrients.FIBTG,
+    },
+    measures,
+    image: edamamFood.image,
+    isPopular: false,
+  });
+
+  return res.status(200).json({
+    status: 'success',
+    source: 'edamam',
+    data: { data: food },
+  });
 });
 
 exports.getMyFoods = catchAsync(async (req, res, next) => {
