@@ -11,6 +11,11 @@ const foodSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide name of food.'],
   },
+  // Used for fast case-insensitive lookups before falling back to EDAMAM.
+  normalizedName: {
+    type: String,
+    trim: true,
+  },
   totalWeight: {
     // grams
     type: Number,
@@ -72,8 +77,16 @@ const foodSchema = new mongoose.Schema({
   },
 });
 
+// Fast local lookup for foods before calling the external EDAMAM API.
+foodSchema.index({ normalizedName: 1 });
+
 // Optimize popular-food queries that filter by popularity and rank by protein/calorie ratio.
 foodSchema.index({ isPopular: 1, proteinCalorieRatio: -1 });
+
+foodSchema.pre('validate', function (next) {
+  if (this.name) this.normalizedName = this.name.trim().toLowerCase();
+  next();
+});
 
 foodSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
