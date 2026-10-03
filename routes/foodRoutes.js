@@ -9,6 +9,10 @@ router
   .get(foodController.aliasTopProteinFoods, foodController.getAllFoods);
 
 router
+  .route('/lookup')
+  .get(authController.protect, foodController.lookupFood);
+
+router
   .route('/')
   .get(foodController.getAllFoods) 
   .post(
