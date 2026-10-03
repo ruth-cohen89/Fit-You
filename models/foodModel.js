@@ -77,8 +77,8 @@ const foodSchema = new mongoose.Schema({
   },
 });
 
-// Fast local lookup for foods before calling the external EDAMAM API.
-foodSchema.index({ normalizedName: 1 });
+// Fast local lookup for shared foods before calling the external EDAMAM API.
+foodSchema.index({ normalizedName: 1, user: 1 });
 
 // Optimize popular-food queries that filter by popularity and rank by protein/calorie ratio.
 foodSchema.index({ isPopular: 1, proteinCalorieRatio: -1 });
